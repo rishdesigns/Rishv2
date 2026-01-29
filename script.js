@@ -1,0 +1,669 @@
+// script.js
+// Vanilla JS for infinite scrolling portfolio strip and lightbox gallery
+// Commented for clarity
+
+document.addEventListener('DOMContentLoaded', () => {
+  // Animate heading by splitting text into spans for per-letter stagger
+  const nameEl = document.querySelector('.name');
+  if (nameEl) {
+    const txt = nameEl.textContent.trim();
+    nameEl.innerHTML = '';
+    Array.from(txt).forEach((ch, i) => {
+      const span = document.createElement('span');
+      span.textContent = ch === ' ' ? '\u00A0' : ch;
+      span.style.setProperty('--i', i);
+      span.style.animationDelay = `${i * 0.03}s`;
+      nameEl.appendChild(span);
+    });
+  }
+
+  // Animate subtitle by words
+  const sub = document.querySelector('.subtitle');
+  if (sub) {
+    const words = sub.textContent.trim().split(/\s+/);
+    sub.innerHTML = '';
+    words.forEach((w, i) => {
+      const span = document.createElement('span');
+      span.textContent = w; // spacing handled via CSS margin to avoid collapsing issues
+      span.style.animationDelay = `${0.12 + i * 0.06}s`;
+      sub.appendChild(span);
+    });
+  }
+  const track = document.getElementById('track');
+  const cards = Array.from(track.children);
+  // Selected Work: data-driven grid
+  const projectsGrid = document.getElementById('projectsGrid');
+
+  // Easy to manage projects list.
+  // Add new items here. 'hasCaseStudy: true' will add the tag.
+  const projects = [
+    {
+      id: 1,
+      title: 'Call Recording App',
+      category: 'Mobile',
+      image: 'Assets/Call%20recording%20app%20Rish%20Designs.png',
+      link: '#',
+      hasCaseStudy: true
+    },
+    {
+      id: 2,
+      title: 'Christmas UI',
+      category: 'Landing Pages',
+      image: 'https://i.ibb.co/kVTJCCGC/Scene.gif',
+      link: '#',
+      hasCaseStudy: false
+    },
+    {
+      id: 3,
+      title: 'Crypto UI',
+      category: 'SaaS',
+      image: 'Assets/Crypto%20UI%20Rish%20Designs.png',
+      link: '#',
+      hasCaseStudy: false
+    },
+    {
+      id: 4,
+      title: 'Fitness App',
+      category: 'Mobile',
+      image: 'Assets/Fitness%20app%20UI.png',
+      link: '#',
+      hasCaseStudy: false
+    },
+    {
+      id: 5,
+      title: 'Food App',
+      category: 'Mobile',
+      image: 'Assets/Food%20app%20ui%20Rish%20Designs.png',
+      link: '#',
+      hasCaseStudy: false
+    },
+    {
+      id: 6,
+      title: 'Glassmorphism Landing',
+      category: 'Landing Pages',
+      image: 'Assets/Glassmorphism%20Landing%20Page%20Rish%20Designs.png',
+      link: '#',
+      hasCaseStudy: true
+    },
+    {
+      id: 7,
+      title: 'Liquid Glass UI',
+      category: 'SaaS',
+      image: 'Assets/Liquid%20Glass%20UI%20Rish%20Designs.png',
+      link: '#',
+      hasCaseStudy: false
+    },
+    {
+      id: 8,
+      title: 'Podcast App',
+      category: 'Mobile',
+      image: 'Assets/Podcast%20app.png',
+      link: '#',
+      hasCaseStudy: false
+    },
+    {
+      id: 9,
+      title: 'NFT Web App',
+      category: 'SaaS',
+      image: 'Assets/NFT%20Web%20app.png',
+      link: '#',
+      hasCaseStudy: true
+    }
+  ];
+
+  function buildCard(p) {
+    const a = document.createElement('a');
+    a.className = 'project-card project-item';
+    a.href = p.link || '#';
+    a.setAttribute('data-id', p.id);
+    a.target = p.hasCaseStudy ? '_self' : '_blank';
+
+    // 1. Image Wrap
+    const imgWrap = document.createElement('div');
+    imgWrap.className = 'img-wrap';
+
+    // Case Study Tag
+    if (p.hasCaseStudy) {
+      const tag = document.createElement('span');
+      tag.className = 'case-tag';
+      tag.textContent = 'Case Study';
+      imgWrap.appendChild(tag);
+    }
+
+    const img = document.createElement('img');
+    img.src = p.image;
+    img.alt = p.title;
+    img.setAttribute('loading', 'lazy');
+    imgWrap.appendChild(img);
+
+    const viewBtn = document.createElement('div');
+    viewBtn.className = 'view-btn';
+    // Using simple innerHTML for the static SVG is acceptable, but let's keep it safe
+    viewBtn.innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>';
+    imgWrap.appendChild(viewBtn);
+
+    // 2. Info Section
+    const info = document.createElement('div');
+    info.className = 'info';
+
+    const titleEl = document.createElement('div');
+    titleEl.className = 'title';
+    titleEl.textContent = p.title;
+
+    const categoryEl = document.createElement('div');
+    categoryEl.className = 'category';
+    categoryEl.textContent = p.category;
+
+    info.appendChild(titleEl);
+    info.appendChild(categoryEl);
+
+    a.appendChild(imgWrap);
+    a.appendChild(info);
+
+    return a;
+  }
+
+  let projectsEntered = false;
+  let isShowingAllProjects = false;
+  const viewMoreWrap = document.getElementById('viewMoreWrap');
+  const viewMoreBtn = document.getElementById('viewMoreBtn');
+
+  function renderProjects(filter = 'All') {
+    if (!projectsGrid) return;
+
+    // animate out existing
+    const existing = Array.from(projectsGrid.children);
+    // Faster stagger out (20ms) but longer total time (400ms) for a cleaner clear
+    existing.forEach((el, i) => {
+      el.classList.remove('is-visible');
+      el.style.transitionDelay = `${i * 20}ms`;
+    });
+
+    setTimeout(() => {
+      projectsGrid.innerHTML = '';
+      const filtered = projects.filter(p => filter === 'All' ? true : p.category === filter);
+
+      // Limiting logic
+      const limit = 8;
+      const shouldShowViewMore = filtered.length > limit;
+
+      if (viewMoreWrap) {
+        viewMoreWrap.style.display = (shouldShowViewMore && !isShowingAllProjects) ? 'flex' : 'none';
+      }
+
+      const projectsToDisplay = isShowingAllProjects ? filtered : filtered.slice(0, limit);
+      const frag = document.createDocumentFragment();
+
+      projectsToDisplay.forEach((p, i) => {
+        const el = buildCard(p);
+        // Slightly slower entry stagger (80ms) for a high-end feel
+        el.style.transitionDelay = `${i * 80}ms`;
+        frag.appendChild(el);
+      });
+
+      projectsGrid.appendChild(frag);
+
+      // Trigger the enter animation
+      requestAnimationFrame(() => {
+        if (projectsEntered) {
+          // Use a tiny timeout to ensure DOM is ready and transition-delay is respected
+          setTimeout(() => {
+            Array.from(projectsGrid.children).forEach((c) => c.classList.add('is-visible'));
+          }, 20);
+        }
+      });
+    }, 400); // Increased from 200ms to allow smooth fade out
+  }
+
+  // filters
+  const filterBtns = document.querySelectorAll('.selected-work .filter');
+  filterBtns.forEach(btn => btn.addEventListener('click', (e) => {
+    filterBtns.forEach(b => { b.classList.remove('active'); b.setAttribute('aria-pressed', 'false'); });
+    const b = e.currentTarget; b.classList.add('active'); b.setAttribute('aria-pressed', 'true');
+    isShowingAllProjects = false; // Reset to limited view when filter changes
+    renderProjects(b.getAttribute('data-filter'));
+  }));
+
+  // View More Projects Click Handler
+  if (viewMoreBtn) {
+    viewMoreBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      isShowingAllProjects = true;
+      const activeFilter = document.querySelector('.selected-work .filter.active')?.getAttribute('data-filter') || 'All';
+      renderProjects(activeFilter);
+    });
+  }
+
+  // Initial render
+  renderProjects('All');
+
+  // Intersection Observer for Selected Work Section
+  const selectedWorkSection = document.getElementById('selected-work');
+  if (selectedWorkSection) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          projectsEntered = true;
+          // Trigger animation for cards currently in grid
+          const items = projectsGrid.querySelectorAll('.project-item');
+          items.forEach((item, i) => {
+            // Re-apply delay in case they were rendered before scroll
+            item.style.transitionDelay = `${i * 80}ms`;
+            requestAnimationFrame(() => item.classList.add('is-visible'));
+          });
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    observer.observe(selectedWorkSection);
+  }
+
+  const lightbox = document.getElementById('lightbox');
+  const lbImg = document.querySelector('.lb-img');
+  const lbClose = document.querySelector('.lb-close');
+  const lbNext = document.querySelector('.lb-next');
+  const lbPrev = document.querySelector('.lb-prev');
+
+  // Stagger entrance for cards
+  Array.from(track.children).forEach((c, i) => {
+    c.style.animationDelay = `${i * 60}ms`;
+  });
+
+  // ensure we have enough items for seamless scroll by cloning until width > 2x container
+  const ensureLoop = () => {
+    const containerWidth = track.parentElement.offsetWidth;
+    let totalW = 0;
+    Array.from(track.children).forEach(ch => totalW += ch.getBoundingClientRect().width + parseFloat(getComputedStyle(track).gap || 16));
+    // clone until totalW > containerWidth * 2
+    let idx = 0;
+    while (totalW < containerWidth * 2) {
+      const clone = track.children[idx % cards.length].cloneNode(true);
+      track.appendChild(clone);
+      totalW += clone.getBoundingClientRect().width + parseFloat(getComputedStyle(track).gap || 16);
+      idx++;
+      if (idx > 50) break; // safety
+    }
+  };
+  ensureLoop();
+
+  // Scrolling using requestAnimationFrame with delta-time for "liquid" smoothness
+  let px = 0; // current translation
+  const speedScale = 0.05; // speed factor (px per ms)
+  let lastTime = performance.now();
+  let paused = false;
+
+  // On small screens, disable auto-scroll (allow manual swipe). Threshold: 420px
+  // Enable auto-scroll on all devices for "super smooth" feel
+  const isAutoScrollEnabled = () => true;
+
+  // compute width of one loop (first set of originals)
+  // compute width of one loop (distance to first clone for pixel-perfect wrap)
+  const originalWidth = () => {
+    if (track.children.length > cards.length) {
+      return track.children[cards.length].offsetLeft - track.children[0].offsetLeft;
+    }
+    // fallback sum (not used in normal flow)
+    const gap = parseFloat(getComputedStyle(track).gap || 16);
+    let w = 0;
+    for (let i = 0; i < cards.length; i++) w += cards[i].getBoundingClientRect().width;
+    return w + cards.length * gap;
+  };
+
+  let loopWidth = originalWidth();
+
+  // Re-calibrate on resize for butter-smooth continuity
+  window.addEventListener('resize', () => {
+    loopWidth = originalWidth();
+  });
+
+  function step(currentTime) {
+    const deltaTime = currentTime - lastTime;
+    lastTime = currentTime;
+
+    if (!paused && isAutoScrollEnabled() && deltaTime < 100) {
+      px += speedScale * deltaTime;
+      if (px >= loopWidth) px = px - loopWidth;
+      // Use raw floats for flawlessly smooth browser interpolation
+      track.style.transform = `translate3d(${-px}px, 0, 0)`;
+    }
+    raf = requestAnimationFrame(step);
+  }
+
+  let raf = requestAnimationFrame(step);
+
+  // Pause on hover/focus
+  track.addEventListener('mouseenter', () => paused = true);
+  track.addEventListener('mouseleave', () => paused = false);
+
+  // Manual drag/swipe logic with momentum
+  let isDragging = false;
+  let dragStartX = 0;
+  let dragStartPx = 0;
+  let lastDragX = 0;
+  let velocity = 0;
+
+  track.addEventListener('touchstart', (e) => {
+    paused = true;
+    isDragging = true;
+    dragStartX = e.touches[0].clientX;
+    lastDragX = dragStartX;
+    dragStartPx = px;
+    velocity = 0;
+    track.style.cursor = 'grabbing';
+  }, { passive: true });
+
+  track.addEventListener('touchmove', (e) => {
+    if (!isDragging) return;
+    const currentX = e.touches[0].clientX;
+    const deltaX = dragStartX - currentX;
+
+    // Smooth velocity tracking
+    velocity = (lastDragX - currentX) * 0.8 + (velocity * 0.2);
+    lastDragX = currentX;
+
+    px = dragStartPx + deltaX;
+
+    // Bounds wrapping
+    if (px >= loopWidth) {
+      px -= loopWidth;
+      dragStartX -= loopWidth;
+    } else if (px < 0) {
+      px += loopWidth;
+      dragStartX += loopWidth;
+    }
+
+    track.style.transform = `translate3d(${-px}px, 0, 0)`;
+  }, { passive: true });
+
+  track.addEventListener('touchend', () => {
+    isDragging = false;
+    track.style.cursor = 'grab';
+
+    const applyMomentum = () => {
+      if (Math.abs(velocity) < 0.1 || isDragging) {
+        paused = false;
+        return;
+      }
+      px += velocity;
+      velocity *= 0.95; // Friction
+
+      if (px >= loopWidth) px -= loopWidth;
+      else if (px < 0) px += loopWidth;
+
+      track.style.transform = `translate3d(${-px}px, 0, 0)`;
+      requestAnimationFrame(applyMomentum);
+    };
+    applyMomentum();
+  });
+
+  // Mouse drag for desktop
+  track.addEventListener('mousedown', (e) => {
+    paused = true;
+    isDragging = true;
+    dragStartX = e.clientX;
+    lastDragX = dragStartX;
+    dragStartPx = px;
+    velocity = 0;
+    track.style.cursor = 'grabbing';
+  });
+
+  window.addEventListener('mousemove', (e) => {
+    if (!isDragging) return;
+    const deltaX = dragStartX - e.clientX;
+    velocity = (lastDragX - e.clientX) * 0.8 + (velocity * 0.2);
+    lastDragX = e.clientX;
+    px = dragStartPx + deltaX;
+
+    if (px >= loopWidth) {
+      px -= loopWidth;
+      dragStartX -= loopWidth;
+    } else if (px < 0) {
+      px += loopWidth;
+      dragStartX += loopWidth;
+    }
+    track.style.transform = `translate3d(${-px}px, 0, 0)`;
+  });
+
+  window.addEventListener('mouseup', () => {
+    if (!isDragging) return;
+    isDragging = false;
+    track.style.cursor = 'grab';
+
+    const applyMomentum = () => {
+      if (Math.abs(velocity) < 0.1 || isDragging) {
+        paused = false;
+        return;
+      }
+      px += velocity;
+      velocity *= 0.95;
+      if (px >= loopWidth) px -= loopWidth;
+      else if (px < 0) px += loopWidth;
+      track.style.transform = `translate3d(${-px}px, 0, 0)`;
+      requestAnimationFrame(applyMomentum);
+    };
+    applyMomentum();
+  });
+
+  // Recompute sizes on resize
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      loopWidth = originalWidth();
+      // If auto-scroll now disabled, ensure track transform is reset
+      if (!isAutoScrollEnabled()) track.style.transform = '';
+    }, 120);
+  });
+
+  // Lightbox behavior
+  const openLightbox = (imgEl) => {
+    const imgs = Array.from(document.querySelectorAll('.portfolio-track .card img'));
+    const idx = imgs.indexOf(imgEl);
+    lightbox.setAttribute('aria-hidden', 'false');
+    lightbox.dataset.index = idx;
+    lbImg.src = imgEl.src;
+    lbImg.alt = imgEl.alt || '';
+    document.body.style.overflow = 'hidden';
+  };
+
+  const closeLightbox = () => {
+    lightbox.setAttribute('aria-hidden', 'true');
+    lbImg.src = '';
+    document.body.style.overflow = '';
+  };
+
+  const showByOffset = (offset) => {
+    const imgs = Array.from(document.querySelectorAll('.portfolio-track .card img'));
+    let idx = parseInt(lightbox.dataset.index || 0, 10);
+    idx = (idx + offset + imgs.length) % imgs.length;
+    lightbox.dataset.index = idx;
+    lbImg.src = imgs[idx].src;
+    lbImg.alt = imgs[idx].alt || '';
+  };
+
+  // Click on cards to open lightbox
+  track.addEventListener('click', (e) => {
+    const img = e.target.closest('img');
+    if (!img) return;
+    openLightbox(img);
+  });
+
+  lbClose.addEventListener('click', closeLightbox);
+  lbNext.addEventListener('click', () => showByOffset(1));
+  lbPrev.addEventListener('click', () => showByOffset(-1));
+
+  // click outside image closes
+  lightbox.addEventListener('click', (e) => {
+    if (e.target === lightbox || e.target.classList.contains('lb-stage')) closeLightbox();
+  });
+
+  // ESC to close, arrow keys for nav
+  document.addEventListener('keydown', (e) => {
+    if (lightbox.getAttribute('aria-hidden') === 'false') {
+      if (e.key === 'Escape') closeLightbox();
+      if (e.key === 'ArrowRight') showByOffset(1);
+      if (e.key === 'ArrowLeft') showByOffset(-1);
+    }
+  });
+
+  // Touch swipe support for lightbox on small screens
+  (function touchSwipe() {
+    let startX = 0, startY = 0, distX = 0;
+    const threshold = 40;
+    const stage = document.querySelector('.lb-stage');
+    stage.addEventListener('touchstart', e => { startX = e.touches[0].clientX; startY = e.touches[0].clientY }, { passive: true });
+    stage.addEventListener('touchmove', e => { distX = e.touches[0].clientX - startX }, { passive: true });
+    stage.addEventListener('touchend', () => {
+      if (Math.abs(distX) > threshold) {
+        if (distX < 0) showByOffset(1); else showByOffset(-1);
+      }
+      startX = distX = 0;
+    });
+  })();
+
+  // Cleanup when unloading
+  window.addEventListener('beforeunload', () => cancelAnimationFrame(raf));
+
+  // Mobile navigation: hamburger toggle
+  const navToggle = document.querySelector('.nav-toggle');
+  const mobileMenu = document.getElementById('mobileMenu');
+  // Top navigation scroll behavior: add scrolled class for glass effect
+  const topnav = document.querySelector('.topnav');
+  // Top navigation: make sticky + change background on scroll.
+  // Behavior:
+  // - Default: transparent background so hero content shows through.
+  // - When user scrolls even 1px, add `.scrolled` to make background solid black (#000).
+  // Implementation uses IntersectionObserver to avoid scroll jank. Falls back to
+  // an optimized requestAnimationFrame-based scroll listener when IO isn't available.
+  if (topnav) {
+    const onScroll = () => {
+      if (window.scrollY > 1) {
+        topnav.classList.add('scrolled');
+      } else {
+        topnav.classList.remove('scrolled');
+      }
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    // Run once on load
+    onScroll();
+  }
+  if (navToggle && mobileMenu) {
+    const closeBtn = mobileMenu.querySelector('.mobile-close');
+    function openMenu() {
+      navToggle.setAttribute('aria-expanded', 'true');
+      mobileMenu.setAttribute('aria-hidden', 'false');
+      mobileMenu.classList.add('open');
+      // focus first link
+      const firstLink = mobileMenu.querySelector('a'); if (firstLink) firstLink.focus();
+    }
+    function closeMenu() {
+      navToggle.setAttribute('aria-expanded', 'false');
+      mobileMenu.setAttribute('aria-hidden', 'true');
+      mobileMenu.classList.remove('open');
+      navToggle.focus();
+    }
+    navToggle.addEventListener('click', (e) => {
+      const expanded = navToggle.getAttribute('aria-expanded') === 'true';
+      if (expanded) closeMenu(); else openMenu();
+    });
+    closeBtn.addEventListener('click', closeMenu);
+    // close when clicking a link
+    mobileMenu.addEventListener('click', (e) => {
+      if (e.target.tagName === 'A') closeMenu();
+    });
+    // close on ESC
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && mobileMenu.getAttribute('aria-hidden') === 'false') closeMenu() });
+    // click outside to close
+    document.addEventListener('click', (e) => {
+      if (mobileMenu.getAttribute('aria-hidden') === 'false' && !mobileMenu.contains(e.target) && !navToggle.contains(e.target)) closeMenu();
+    });
+  }
+
+  // Scroll Reveal for Section Titles
+  const revealTexts = document.querySelectorAll('.reveal-text[data-reveal]');
+  revealTexts.forEach(el => {
+    const text = el.textContent.trim();
+    const words = text.split(/\s+/);
+    el.innerHTML = '';
+
+    words.forEach((word, i) => {
+      const span = document.createElement('span');
+      span.textContent = word + (i < words.length - 1 ? '\u00A0' : '');
+      el.appendChild(span);
+    });
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          el.classList.add('active');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, {
+      threshold: 0.1
+    });
+
+    observer.observe(el);
+  });
+
+  // --- About Me Section Logic ---
+
+  // 1. Tool Marquee Cloning for seamless loop
+  const toolsMarquee = document.getElementById('toolsMarquee');
+  if (toolsMarquee) {
+    const items = Array.from(toolsMarquee.children);
+    // Duplicate twice for safety and smoothness
+    items.forEach(item => {
+      const clone = item.cloneNode(true);
+      toolsMarquee.appendChild(clone);
+    });
+  }
+
+  // 2. Intersection Observer for About Cards
+  const aboutCards = document.querySelectorAll('.about-card');
+  if (aboutCards.length > 0) {
+    const aboutObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          aboutObserver.unobserve(entry.target);
+        }
+      });
+    }, {
+      threshold: 0.15,
+      rootMargin: '0px 0px -50px 0px'
+    });
+
+    aboutCards.forEach((card, i) => {
+      // Set staggered transition delay
+      card.style.transitionDelay = `${i * 100}ms`;
+      aboutObserver.observe(card);
+
+      // Magnetic 3D Tilt & Spotlight Logic
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        // Calculate percentage for spotlight
+        const percentX = (x / rect.width) * 100;
+        const percentY = (y / rect.height) * 100;
+
+        // Calculate tilt (max 10 degrees)
+        const tiltX = (y / rect.height - 0.5) * -15; // Inverted for natural feel
+        const tiltY = (x / rect.width - 0.5) * 15;
+
+        card.style.setProperty('--mouse-x', `${percentX}%`);
+        card.style.setProperty('--mouse-y', `${percentY}%`);
+        card.style.setProperty('--tilt-x', `${tiltX}deg`);
+        card.style.setProperty('--tilt-y', `${tiltY}deg`);
+      });
+
+      card.addEventListener('mouseleave', () => {
+        // Smoothly reset tilt
+        card.style.setProperty('--tilt-x', `0deg`);
+        card.style.setProperty('--tilt-y', `0deg`);
+      });
+    });
+  }
+});
