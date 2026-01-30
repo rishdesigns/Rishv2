@@ -138,8 +138,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const viewBtn = document.createElement('div');
     viewBtn.className = 'view-btn';
-    // Using simple innerHTML for the static SVG is acceptable, but let's keep it safe
-    viewBtn.innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>';
+    // Match the premium arrow-up-right icon
+    viewBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7 17L17 7M17 7H7M17 7V17" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
     imgWrap.appendChild(viewBtn);
 
     // 2. Info Section
@@ -264,9 +264,37 @@ document.addEventListener('DOMContentLoaded', () => {
   const lbNext = document.querySelector('.lb-next');
   const lbPrev = document.querySelector('.lb-prev');
 
-  // Stagger entrance for cards
+  // Stagger entrance for initial cards
   Array.from(track.children).forEach((c, i) => {
     c.style.animationDelay = `${i * 60}ms`;
+  });
+
+  // Event Delegation for 3D Tilt Effect (works on originals and clones)
+  track.addEventListener('mousemove', (e) => {
+    const card = e.target.closest('.card');
+    if (!card) return;
+
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    // Ambient glow gradient center
+    const percentX = (x / rect.width) * 100;
+    const percentY = (y / rect.height) * 100;
+
+    // Tilt Calculation
+    const tiltX = (y / rect.height - 0.5) * -12;
+    const tiltY = (x / rect.width - 0.5) * 12;
+
+    card.style.setProperty('--mouse-x', `${percentX}%`);
+    card.style.setProperty('--mouse-y', `${percentY}%`);
+    card.style.transform = `translateY(-20px) translateZ(50px) rotateX(${tiltX}deg) rotateY(${tiltY}deg)`;
+  });
+
+  track.addEventListener('mouseout', (e) => {
+    const card = e.target.closest('.card');
+    if (!card || card.contains(e.relatedTarget)) return;
+    card.style.transform = '';
   });
 
   // ensure we have enough items for seamless scroll by cloning until width > 2x container
@@ -455,37 +483,73 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 120);
   });
 
-  // Lightbox behavior
-  const openLightbox = (imgEl) => {
-    const imgs = Array.from(document.querySelectorAll('.portfolio-track .card img'));
-    const idx = imgs.indexOf(imgEl);
+  // Premium Lightbox behavior
+  const lbBackdrop = lightbox.querySelector('.lb-backdrop');
+  const lbMetaCategory = lightbox.querySelector('.lb-meta-category');
+  const lbMetaTitle = lightbox.querySelector('.lb-meta-title');
+  const lbMetaYear = lightbox.querySelector('.lb-meta-year');
+
+  const openLightbox = (cardEl) => {
+    const cardImg = cardEl.querySelector('img');
+    const allCards = Array.from(track.querySelectorAll('.card'));
+    const idx = allCards.indexOf(cardEl);
+
+    // Prep metadata
+    lbMetaTitle.textContent = cardEl.getAttribute('data-title') || '';
+    lbMetaCategory.textContent = cardEl.getAttribute('data-role') || '';
+    lbMetaYear.textContent = cardEl.getAttribute('data-year') || '';
+
     lightbox.setAttribute('aria-hidden', 'false');
     lightbox.dataset.index = idx;
-    lbImg.src = imgEl.src;
-    lbImg.alt = imgEl.alt || '';
+    lbImg.src = cardImg.src;
+    lbImg.alt = cardImg.alt || '';
+
     document.body.style.overflow = 'hidden';
   };
 
   const closeLightbox = () => {
     lightbox.setAttribute('aria-hidden', 'true');
-    lbImg.src = '';
+    setTimeout(() => {
+      lbImg.src = '';
+    }, 300);
     document.body.style.overflow = '';
   };
 
-  const showByOffset = (offset) => {
-    const imgs = Array.from(document.querySelectorAll('.portfolio-track .card img'));
-    let idx = parseInt(lightbox.dataset.index || 0, 10);
-    idx = (idx + offset + imgs.length) % imgs.length;
+  const updateLightboxContent = (idx) => {
+    const allCards = Array.from(track.querySelectorAll('.card'));
+    const cardEl = allCards[idx];
+    if (!cardEl) return;
+
+    const cardImg = cardEl.querySelector('img');
     lightbox.dataset.index = idx;
-    lbImg.src = imgs[idx].src;
-    lbImg.alt = imgs[idx].alt || '';
+
+    // Crossfade effect: briefly lower opacity
+    lbImg.style.opacity = '0';
+    setTimeout(() => {
+      lbImg.src = cardImg.src;
+      lbImg.alt = cardImg.alt || '';
+      lbMetaTitle.textContent = cardEl.getAttribute('data-title') || '';
+      lbMetaCategory.textContent = cardEl.getAttribute('data-role') || '';
+      lbMetaYear.textContent = cardEl.getAttribute('data-year') || '';
+      lbImg.style.opacity = '1';
+    }, 150);
   };
 
-  // Click on cards to open lightbox
+  const showByOffset = (offset) => {
+    const allCards = Array.from(track.querySelectorAll('.card'));
+    let idx = parseInt(lightbox.dataset.index || 0, 10);
+    idx = (idx + offset + allCards.length) % allCards.length;
+    updateLightboxContent(idx);
+  };
+
+  // Click on cards to open lightbox (bubbling handler for cloned items)
   track.addEventListener('click', (e) => {
-    const img = e.target.closest('img');
-    if (!img) return;
-    openLightbox(img);
+    // If we're dragging, don't open lightbox
+    if (Math.abs(velocity) > 0.5 || isDragging) return;
+
+    const card = e.target.closest('.card');
+    if (!card) return;
+    openLightbox(card);
   });
 
   lbClose.addEventListener('click', closeLightbox);
@@ -494,7 +558,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // click outside image closes
   lightbox.addEventListener('click', (e) => {
-    if (e.target === lightbox || e.target.classList.contains('lb-stage')) closeLightbox();
+    if (e.target === lightbox || e.target === lbBackdrop || e.target.classList.contains('lb-stage')) {
+      closeLightbox();
+    }
   });
 
   // ESC to close, arrow keys for nav
@@ -506,20 +572,34 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Touch swipe support for lightbox on small screens
-  (function touchSwipe() {
-    let startX = 0, startY = 0, distX = 0;
-    const threshold = 40;
-    const stage = document.querySelector('.lb-stage');
-    stage.addEventListener('touchstart', e => { startX = e.touches[0].clientX; startY = e.touches[0].clientY }, { passive: true });
-    stage.addEventListener('touchmove', e => { distX = e.touches[0].clientX - startX }, { passive: true });
-    stage.addEventListener('touchend', () => {
-      if (Math.abs(distX) > threshold) {
-        if (distX < 0) showByOffset(1); else showByOffset(-1);
+  // Touch/Trackpad swipe for lightbox
+  let lbStartX = 0;
+  lightbox.addEventListener('touchstart', (e) => {
+    lbStartX = e.touches[0].clientX;
+  }, { passive: true });
+
+  lightbox.addEventListener('touchend', (e) => {
+    const deltaX = lbStartX - e.changedTouches[0].clientX;
+    if (Math.abs(deltaX) > 60) {
+      showByOffset(deltaX > 0 ? 1 : -1);
+    }
+  }, { passive: true });
+
+  // Mouse movement close button fade-in logic
+  let closeBtnTimer;
+  lightbox.addEventListener('mousemove', () => {
+    lbClose.style.opacity = '1';
+    lbNext.style.opacity = '1';
+    lbPrev.style.opacity = '1';
+    clearTimeout(closeBtnTimer);
+    closeBtnTimer = setTimeout(() => {
+      if (lightbox.getAttribute('aria-hidden') === 'false') {
+        lbClose.style.opacity = '0.3';
+        lbNext.style.opacity = '0.3';
+        lbPrev.style.opacity = '0.3';
       }
-      startX = distX = 0;
-    });
-  })();
+    }, 2000);
+  });
 
   // Cleanup when unloading
   window.addEventListener('beforeunload', () => cancelAnimationFrame(raf));

@@ -1,0 +1,366 @@
+/* ============================================
+   PREMIUM PORTFOLIO STRIP
+   Apple / Linear / Framer Quality
+   ============================================ */
+
+/* Base card styling */
+.card {
+    position: relative;
+    flex: 0 0 auto;
+    width: 400px;
+    height: 300px;
+    border-radius: 16px;
+    overflow: hidden;
+    cursor: pointer;
+    background: #0a0a0a;
+
+    /* Enable 3D transforms */
+    transform-style: preserve-3d;
+    perspective: 1000px;
+
+    /* Smooth transitions */
+    transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+
+    /* Initial shadow */
+    box-shadow:
+        0 4px 24px rgba(0, 0, 0, 0.3),
+        0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+/* 3D hover effect with tilt */
+.card:hover {
+    transform: translateY(-12px) translateZ(50px);
+    box-shadow:
+        0 24px 48px rgba(0, 0, 0, 0.5),
+        0 8px 16px rgba(0, 0, 0, 0.3),
+        0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+/* Ambient glow effect */
+.card-glow {
+    position: absolute;
+    inset: -40px;
+    background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+            rgba(89, 166, 255, 0.15),
+            rgba(139, 92, 246, 0.1),
+            transparent 60%);
+    opacity: 0;
+    transition: opacity 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+    pointer-events: none;
+    z-index: 0;
+    filter: blur(20px);
+}
+
+.card:hover .card-glow {
+    opacity: 1;
+}
+
+/* Glassmorphism overlay */
+.card-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg,
+            rgba(0, 0, 0, 0) 0%,
+            rgba(0, 0, 0, 0.4) 60%,
+            rgba(0, 0, 0, 0.85) 100%);
+    backdrop-filter: blur(8px) saturate(150%);
+    -webkit-backdrop-filter: blur(8px) saturate(150%);
+    opacity: 0;
+    transition: opacity 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    display: flex;
+    align-items: flex-end;
+    padding: 24px;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.card:hover .card-overlay {
+    opacity: 1;
+}
+
+/* Project metadata */
+.card-content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    transform: translateY(12px);
+    transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.card:hover .card-content {
+    transform: translateY(0);
+}
+
+.card-category {
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.6);
+    opacity: 0;
+    transform: translateY(8px);
+    transition:
+        opacity 0.4s cubic-bezier(0.23, 1, 0.32, 1) 0.05s,
+        transform 0.5s cubic-bezier(0.23, 1, 0.32, 1) 0.05s;
+}
+
+.card:hover .card-category {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.card-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #fff;
+    margin: 0;
+    opacity: 0;
+    transform: translateY(8px);
+    transition:
+        opacity 0.4s cubic-bezier(0.23, 1, 0.32, 1) 0.1s,
+        transform 0.5s cubic-bezier(0.23, 1, 0.32, 1) 0.1s;
+}
+
+.card:hover .card-title {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Premium image rendering */
+.card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    position: relative;
+    z-index: 1;
+
+    /* Sharp rendering */
+    image-rendering: -webkit-optimize-contrast;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+
+    /* Micro-zoom on hover */
+    transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.card:hover img {
+    transform: scale(1.05) translateZ(0);
+}
+
+/* ============================================
+   PREMIUM LIGHTBOX GALLERY
+   ============================================ */
+
+.lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.lightbox[aria-hidden="false"] {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Dark translucent backdrop */
+.lb-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.92);
+    backdrop-filter: blur(40px) saturate(120%);
+    -webkit-backdrop-filter: blur(40px) saturate(120%);
+}
+
+/* Image stage */
+.lb-stage {
+    position: relative;
+    max-width: 85vw;
+    max-height: 85vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+}
+
+/* Premium lightbox image */
+.lb-img {
+    max-width: 100%;
+    max-height: 85vh;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    border-radius: 12px;
+    box-shadow:
+        0 40px 80px rgba(0, 0, 0, 0.8),
+        0 20px 40px rgba(0, 0, 0, 0.6),
+        0 0 0 1px rgba(255, 255, 255, 0.05);
+
+    /* Sharp rendering */
+    image-rendering: -webkit-optimize-contrast;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+
+    /* Scale transition */
+    opacity: 0;
+    transform: scale(0.95) translateZ(0);
+    transition:
+        opacity 0.5s cubic-bezier(0.23, 1, 0.32, 1),
+        transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.lightbox[aria-hidden="false"] .lb-img {
+    opacity: 1;
+    transform: scale(1) translate Z(0);
+}
+
+/* Floating metadata panel */
+.lb-metadata {
+    position: fixed;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 20px 32px;
+    z-index: 3;
+    opacity: 0;
+    transform: translateX(-50%) translateY(20px);
+    transition:
+        opacity 0.5s cubic-bezier(0.23, 1, 0.32, 1) 0.2s,
+        transform 0.5s cubic-bezier(0.23, 1, 0.32, 1) 0.2s;
+}
+
+.lightbox[aria-hidden="false"] .lb-metadata {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+.lb-meta-content {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.lb-meta-category {
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.lb-meta-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #fff;
+    margin: 0;
+}
+
+.lb-meta-year {
+    font-size: 0.875rem;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+/* Navigation buttons */
+.lb-close,
+.lb-prev,
+.lb-next {
+    position: fixed;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    color: #fff;
+    font-size: 1.5rem;
+    font-weight: 300;
+    cursor: pointer;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 4;
+    opacity: 0;
+    transition:
+        opacity 0.3s cubic-bezier(0.23, 1, 0.32, 1),
+        background 0.2s cubic-bezier(0.23, 1, 0.32, 1),
+        transform 0.2s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.lightbox[aria-hidden="false"] .lb-close,
+.lightbox[aria-hidden="false"] .lb-prev,
+.lightbox[aria-hidden="false"] .lb-next {
+    opacity: 1;
+}
+
+.lb-close:hover,
+.lb-prev:hover,
+.lb-next:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: scale(1.05);
+}
+
+.lb-close {
+    top: 24px;
+    right: 24px;
+}
+
+.lb-prev {
+    left: 24px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.lb-prev:hover {
+    transform: translateY(-50%) scale(1.05);
+}
+
+.lb-next {
+    right: 24px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.lb-next:hover {
+    transform: translateY(-50%) scale(1.05);
+}
+
+/* Responsive */
+@media screen and (max-width: 768px) {
+    .card {
+        width: 320px;
+        height: 240px;
+    }
+
+    .lb-metadata {
+        bottom: 20px;
+        padding: 16px 24px;
+    }
+
+    .lb-meta-content {
+        flex-direction: column;
+        gap: 4px;
+        text-align: center;
+    }
+
+    .lb-close,
+    .lb-prev,
+    .lb-next {
+        width: 40px;
+        height: 40px;
+        font-size: 1.25rem;
+    }
+}
