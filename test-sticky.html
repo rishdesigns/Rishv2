@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Capabilities Sticky Test</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: #000;
+            color: #fff;
+        }
+
+        .before-section {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #111;
+            font-size: 2rem;
+        }
+
+        .capabilities {
+            position: relative;
+            width: 100%;
+            background: #000;
+        }
+
+        .capabilities-spacer {
+            position: relative;
+            width: 100%;
+            height: 750vh;
+            /* 5 panels × 150vh */
+            background: linear-gradient(to bottom, #1a0000, #000033);
+        }
+
+        .capabilities-sticky {
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            overflow: hidden;
+            padding: 0 6vw;
+            border: 3px solid lime;
+            /* Debug border */
+        }
+
+        .capabilities-header {
+            position: absolute;
+            top: 60px;
+            left: 6vw;
+            font-size: 0.75rem;
+            letter-spacing: 0.2em;
+            opacity: 0.4;
+        }
+
+        .capabilities-rail {
+            display: flex;
+            align-items: center;
+            width: max-content;
+            transform: translate3d(0, 0, 0);
+            padding: 0 10vw;
+            border: 2px dashed yellow;
+            /* Debug border */
+        }
+
+        .service-panel {
+            width: 80vw;
+            max-width: 1200px;
+            padding-right: 15vw;
+            flex-shrink: 0;
+            border: 2px solid cyan;
+            /* Debug border */
+        }
+
+        .panel-title {
+            font-size: clamp(2.5rem, 6vw, 6.5rem);
+            font-weight: 800;
+            line-height: 0.95;
+        }
+
+        .panel-desc {
+            font-size: 1.25rem;
+            opacity: 0.6;
+            margin-top: 32px;
+        }
+
+        .after-section {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #110011;
+            font-size: 2rem;
+        }
+
+        .debug-info {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.9);
+            padding: 20px;
+            font-family: monospace;
+            font-size: 12px;
+            z-index: 10000;
+            border: 1px solid #0f0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="before-section">
+        SCROLL DOWN ↓
+    </div>
+
+    <section id="capabilities" class="capabilities">
+        <div class="capabilities-spacer">
+            <div class="capabilities-sticky">
+                <div class="capabilities-header">CAPABILITIES</div>
+
+                <div class="capabilities-rail" id="capabilitiesRail">
+                    <div class="service-panel">
+                        <h2 class="panel-title">01. End-to-End Product Design</h2>
+                        <p class="panel-desc">From concept validation to dev-ready handoff.</p>
+                    </div>
+
+                    <div class="service-panel">
+                        <h2 class="panel-title">02. UX for Complex Systems</h2>
+                        <p class="panel-desc">Dashboards, analytics, role-based enterprise workflows.</p>
+                    </div>
+
+                    <div class="service-panel">
+                        <h2 class="panel-title">03. Mobile App Design</h2>
+                        <p class="panel-desc">iOS & Android experiences built to scale.</p>
+                    </div>
+
+                    <div class="service-panel">
+                        <h2 class="panel-title">04. Design Systems</h2>
+                        <p class="panel-desc">Components, tokens, consistency across teams.</p>
+                    </div>
+
+                    <div class="service-panel">
+                        <h2 class="panel-title">05. UX Audit & Redesign</h2>
+                        <p class="panel-desc">Improving clarity, usability, and conversion.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="after-section">
+        SECTION COMPLETE ✓
+    </div>
+
+    <div class="debug-info" id="debugInfo">
+        Scroll to see debug info...
+    </div>
+
+    <script>
+        const capSpacer = document.querySelector('.capabilities-spacer');
+        const capRail = document.getElementById('capabilitiesRail');
+        const debugInfo = document.getElementById('debugInfo');
+
+        const handleScroll = () => {
+            const spacerRect = capSpacer.getBoundingClientRect();
+            const spacerTop = spacerRect.top;
+            const spacerHeight = spacerRect.height;
+            const viewportHeight = window.innerHeight;
+
+            const scrollableDistance = spacerHeight - viewportHeight;
+            const scrolled = -spacerTop;
+            const progress = Math.max(0, Math.min(1, scrolled / scrollableDistance));
+
+            const railWidth = capRail.scrollWidth;
+            const viewportWidth = window.innerWidth;
+            const maxScroll = railWidth - viewportWidth;
+
+            const translateX = progress * maxScroll;
+            capRail.style.transform = `translate3d(${-translateX}px, 0, 0)`;
+
+            debugInfo.innerHTML = `
+        <div>Progress: ${(progress * 100).toFixed(1)}%</div>
+        <div>Spacer Top: ${spacerTop.toFixed(0)}px</div>
+        <div>Translate X: ${translateX.toFixed(0)}px</div>
+        <div>Rail Width: ${railWidth}px</div>
+        <div>Max Scroll: ${maxScroll.toFixed(0)}px</div>
+        <div>Window Width: ${viewportWidth}px</div>
+      `;
+        };
+
+        let scrollTicking = false;
+        window.addEventListener('scroll', () => {
+            if (!scrollTicking) {
+                requestAnimationFrame(() => {
+                    handleScroll();
+                    scrollTicking = false;
+                });
+                scrollTicking = true;
+            }
+        }, { passive: true });
+
+        handleScroll();
+    </script>
+</body>
+
+</html>

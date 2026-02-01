@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
       category: 'Landing Pages',
       image: 'https://i.ibb.co/kVTJCCGC/Scene.gif',
       link: '#',
-      hasCaseStudy: false
+      hasCaseStudy: true
     },
     {
       id: 3,
@@ -299,20 +299,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ensure we have enough items for seamless scroll by cloning until width > 2x container
   const ensureLoop = () => {
-    const containerWidth = track.parentElement.offsetWidth;
-    let totalW = 0;
-    Array.from(track.children).forEach(ch => totalW += ch.getBoundingClientRect().width + parseFloat(getComputedStyle(track).gap || 16));
-    // clone until totalW > containerWidth * 2
+    // 1. Calculate original width precisely
+    const gap = parseFloat(getComputedStyle(track).gap || 16);
+    let originalW = 0;
+    cards.forEach(c => originalW += c.getBoundingClientRect().width + gap);
+
+    // 2. Clone until total length covers at least (original width + viewport width)
+    const containerWidth = window.innerWidth;
+    let totalW = originalW;
     let idx = 0;
-    while (totalW < containerWidth * 2) {
-      const clone = track.children[idx % cards.length].cloneNode(true);
+
+    while (totalW < originalW + containerWidth) {
+      const clone = cards[idx % cards.length].cloneNode(true);
       track.appendChild(clone);
-      totalW += clone.getBoundingClientRect().width + parseFloat(getComputedStyle(track).gap || 16);
+      totalW += clone.getBoundingClientRect().width + gap;
       idx++;
       if (idx > 50) break; // safety
     }
+
+    return originalW;
   };
-  ensureLoop();
+
+  let loopWidth = ensureLoop();
 
   // Scrolling using requestAnimationFrame with delta-time for "liquid" smoothness
   let px = 0; // current translation
@@ -324,24 +332,14 @@ document.addEventListener('DOMContentLoaded', () => {
   // Enable auto-scroll on all devices for "super smooth" feel
   const isAutoScrollEnabled = () => true;
 
-  // compute width of one loop (first set of originals)
-  // compute width of one loop (distance to first clone for pixel-perfect wrap)
-  const originalWidth = () => {
-    if (track.children.length > cards.length) {
-      return track.children[cards.length].offsetLeft - track.children[0].offsetLeft;
-    }
-    // fallback sum (not used in normal flow)
-    const gap = parseFloat(getComputedStyle(track).gap || 16);
-    let w = 0;
-    for (let i = 0; i < cards.length; i++) w += cards[i].getBoundingClientRect().width;
-    return w + cards.length * gap;
-  };
-
-  let loopWidth = originalWidth();
-
   // Re-calibrate on resize for butter-smooth continuity
   window.addEventListener('resize', () => {
-    loopWidth = originalWidth();
+    // Clear clones and re-run ensureLoop for correct measurements on new width
+    const allItems = Array.from(track.children);
+    allItems.forEach((item, i) => {
+      if (i >= cards.length) item.remove();
+    });
+    loopWidth = ensureLoop();
   });
 
   function step(currentTime) {
@@ -745,5 +743,194 @@ document.addEventListener('DOMContentLoaded', () => {
         card.style.setProperty('--tilt-y', `0deg`);
       });
     });
+  }
+
+  // --- Capabilities Section Logic (Horizontal Scroll & Hover Preview) ---
+  const capabilitySect = document.getElementById('capabilities');
+  const capSpacer = document.querySelector('.capabilities-spacer');
+  const capSticky = document.querySelector('.capabilities-sticky');
+  const capRail = document.getElementById('capabilitiesRail');
+  const capIntro = document.getElementById('capabilitiesIntro');
+  const capPanelsWrapper = document.querySelector('.capabilities-panels-wrapper');
+  const hoverPreview = document.getElementById('hover-preview');
+
+  if (capabilitySect && capSpacer && capRail && capIntro && capPanelsWrapper) {
+    const panels = document.querySelectorAll('.service-panel');
+    const panelCount = panels.length;
+
+    // Calculate and set spacer height
+    const calculateSpacerHeight = () => {
+      if (window.innerWidth > 768) {
+        // Extra 100vh for intro slide + 150vh per panel for scroll
+        const spacerHeight = 100 + (panelCount * 150);
+        capSpacer.style.height = `${spacerHeight}vh`;
+      } else {
+        capSpacer.style.height = 'auto';
+      }
+    };
+
+    calculateSpacerHeight();
+
+    // Handle scroll transitions
+    const handleScroll = () => {
+      if (window.innerWidth > 768) {
+        const spacerRect = capSpacer.getBoundingClientRect();
+        const spacerTop = spacerRect.top;
+        const spacerHeight = spacerRect.height;
+        const viewportHeight = window.innerHeight;
+
+        // Calculate overall progress (0 to 1)
+        const scrollableDistance = spacerHeight - viewportHeight;
+        const scrolled = -spacerTop;
+        const overallProgress = Math.max(0, Math.min(1, scrolled / scrollableDistance));
+
+        // Intro fade threshold: 0-15% of total scroll
+        const introFadeThreshold = 0.15;
+
+        if (overallProgress < introFadeThreshold) {
+          // Show intro, hide panels
+          const introOpacity = 1 - (overallProgress / introFadeThreshold);
+          capIntro.style.opacity = introOpacity;
+          capPanelsWrapper.classList.remove('active');
+        } else {
+          // Hide intro, show panels
+          capIntro.classList.add('fade-out');
+          capPanelsWrapper.classList.add('active');
+
+          // Calculate panels scroll progress (15% onwards)
+          const panelsStartProgress = introFadeThreshold;
+          const panelsProgress = (overallProgress - panelsStartProgress) / (1 - panelsStartProgress);
+          const clampedPanelsProgress = Math.max(0, Math.min(1, panelsProgress));
+
+          // Horizontal translation
+          const railWidth = capRail.scrollWidth;
+          const viewportWidth = window.innerWidth;
+          const maxScroll = railWidth - viewportWidth;
+
+          const translateX = clampedPanelsProgress * maxScroll;
+
+          // Use combined transform for GPU acceleration (translateX + centering translateY)
+          capRail.style.transform = `translate3d(${-translateX}px, -50%, 0)`;
+          capRail.style.webkitTransform = `translate3d(${-translateX}px, -50%, 0)`;
+        }
+      } else {
+        // Mobile: Reset all inline styles to let CSS take over
+        capIntro.style.opacity = '';
+        capIntro.classList.remove('fade-out');
+        capPanelsWrapper.classList.add('active');
+        capRail.style.transform = '';
+        capRail.style.webkitTransform = '';
+      }
+    };
+
+    // Throttled scroll handler for performance
+    let scrollTicking = false;
+    const onScroll = () => {
+      if (!scrollTicking) {
+        requestAnimationFrame(() => {
+          handleScroll();
+          scrollTicking = false;
+        });
+        scrollTicking = true;
+      }
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', () => {
+      calculateSpacerHeight();
+      handleScroll();
+    });
+
+    // Initial call
+    handleScroll();
+
+    // 2. Hover Image Preview Logic (Desktop Only)
+    let mouseX = 0;
+    let mouseY = 0;
+    let previewX = 0;
+    let previewY = 0;
+    let currentImages = [];
+    let imageIdx = 0;
+    let imageInterval;
+
+    // Follow mouse with delay (lerp)
+    const animatePreview = () => {
+      if (window.innerWidth > 768) {
+        const ease = 0.12; // 120ms-ish delay feel
+        previewX += (mouseX - previewX) * ease;
+        previewY += (mouseY - previewY) * ease;
+
+        // Offset preview from cursor
+        hoverPreview.style.left = `${previewX + 24}px`;
+        hoverPreview.style.top = `${previewY - 120}px`;
+      }
+      requestAnimationFrame(animatePreview);
+    };
+    animatePreview();
+
+    const switchPreviewImage = () => {
+      if (currentImages.length <= 1) return;
+
+      const activeImg = hoverPreview.querySelector('.preview-img.active');
+      const nextImg = hoverPreview.querySelector('.preview-img:not(.active)');
+
+      imageIdx = (imageIdx + 1) % currentImages.length;
+      nextImg.src = currentImages[imageIdx];
+
+      // Crossfade
+      nextImg.classList.add('active');
+      activeImg.classList.remove('active');
+    };
+
+    panels.forEach(panel => {
+      panel.addEventListener('mouseenter', (e) => {
+        if (window.innerWidth <= 768) {
+          // Mobile: Reveal on tap
+          panels.forEach(p => p.classList.remove('active'));
+          panel.classList.add('active');
+          return;
+        }
+
+        hoverPreview.classList.add('active');
+
+        const imagesStr = panel.getAttribute('data-images');
+        currentImages = imagesStr ? imagesStr.split(',') : [];
+        imageIdx = 0;
+
+        if (currentImages.length > 0) {
+          const activeImg = hoverPreview.querySelector('.preview-img.active');
+          activeImg.src = currentImages[0];
+
+          if (currentImages.length > 1) {
+            clearInterval(imageInterval);
+            imageInterval = setInterval(switchPreviewImage, 2000);
+          }
+        }
+      });
+
+      panel.addEventListener('mouseleave', () => {
+        if (window.innerWidth <= 768) return;
+
+        hoverPreview.classList.remove('active');
+        clearInterval(imageInterval);
+      });
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+    });
+
+    // Mobile: Toggle panel on tap
+    if (window.innerWidth <= 768) {
+      capabilitySect.addEventListener('click', (e) => {
+        const panel = e.target.closest('.service-panel');
+        if (panel) {
+          const isActive = panel.classList.contains('active');
+          panels.forEach(p => p.classList.remove('active'));
+          if (!isActive) panel.classList.add('active');
+        }
+      });
+    }
   }
 });
