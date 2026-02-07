@@ -2,6 +2,9 @@
 // Vanilla JS for infinite scrolling portfolio strip and lightbox gallery
 // Commented for clarity
 
+// Import projects from centralized data file
+import { selectedWorkProjects } from './data/selectedWorkProjects.js';
+
 document.addEventListener('DOMContentLoaded', () => {
   // Animate heading by splitting text into spans for per-letter stagger
   const nameEl = document.querySelector('.name');
@@ -34,96 +37,24 @@ document.addEventListener('DOMContentLoaded', () => {
   // Selected Work: data-driven grid
   const projectsGrid = document.getElementById('projectsGrid');
 
-  // Easy to manage projects list.
-  // Add new items here. 'hasCaseStudy: true' will add the tag.
-  const projects = [
-    {
-      id: 1,
-      title: 'Call Recording App',
-      category: 'Mobile',
-      image: 'Assets/Call%20recording%20app%20Rish%20Designs.png',
-      link: '#',
-      hasCaseStudy: true
-    },
-    {
-      id: 2,
-      title: 'Christmas UI',
-      category: 'Landing Pages',
-      image: 'https://i.ibb.co/kVTJCCGC/Scene.gif',
-      link: '#',
-      hasCaseStudy: true
-    },
-    {
-      id: 3,
-      title: 'Crypto UI',
-      category: 'SaaS',
-      image: 'Assets/Crypto%20UI%20Rish%20Designs.png',
-      link: '#',
-      hasCaseStudy: false
-    },
-    {
-      id: 4,
-      title: 'Fitness App',
-      category: 'Mobile',
-      image: 'Assets/Fitness%20app%20UI.png',
-      link: '#',
-      hasCaseStudy: false
-    },
-    {
-      id: 5,
-      title: 'Food App',
-      category: 'Mobile',
-      image: 'Assets/Food%20app%20ui%20Rish%20Designs.png',
-      link: '#',
-      hasCaseStudy: false
-    },
-    {
-      id: 6,
-      title: 'Glassmorphism Landing',
-      category: 'Landing Pages',
-      image: 'Assets/Glassmorphism%20Landing%20Page%20Rish%20Designs.png',
-      link: '#',
-      hasCaseStudy: true
-    },
-    {
-      id: 7,
-      title: 'Liquid Glass UI',
-      category: 'SaaS',
-      image: 'Assets/Liquid%20Glass%20UI%20Rish%20Designs.png',
-      link: '#',
-      hasCaseStudy: false
-    },
-    {
-      id: 8,
-      title: 'Podcast App',
-      category: 'Mobile',
-      image: 'Assets/Podcast%20app.png',
-      link: '#',
-      hasCaseStudy: false
-    },
-    {
-      id: 9,
-      title: 'NFT Web App',
-      category: 'SaaS',
-      image: 'Assets/NFT%20Web%20app.png',
-      link: '#',
-      hasCaseStudy: true
-    }
-  ];
+  // Projects now imported from data/selectedWorkProjects.js
+  const projects = selectedWorkProjects;
 
   function buildCard(p) {
     const a = document.createElement('a');
     a.className = 'project-card project-item';
-    a.href = p.link || '#';
+    // Link to template-specific HTML file with slug query parameter
+    a.href = `projects/${p.template}.html?slug=${p.slug}`;
     a.setAttribute('data-id', p.id);
-    a.target = p.hasCaseStudy ? '_self' : '_blank';
+    // Open in same tab for internal project pages
+    a.target = '_self';
 
     // 1. Image Wrap
     const imgWrap = document.createElement('div');
     imgWrap.className = 'img-wrap';
 
-    // Case Study Tag
-    if (p.hasCaseStudy) {
+    // Case Study Tag (using type from data)
+    if (p.type === 'case-study') {
       const tag = document.createElement('span');
       tag.className = 'case-tag';
       tag.textContent = 'Case Study';
@@ -131,8 +62,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const img = document.createElement('img');
-    img.src = p.image;
-    img.alt = p.title;
+    img.src = p.heroPlaceholderImage;
+    img.alt = `${p.title} - ${p.category}`;
     img.setAttribute('loading', 'lazy');
     imgWrap.appendChild(img);
 
@@ -146,16 +77,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const info = document.createElement('div');
     info.className = 'info';
 
+    const categoryEl = document.createElement('div');
+    categoryEl.className = 'category';
+    categoryEl.textContent = p.category.toUpperCase();
+
     const titleEl = document.createElement('div');
     titleEl.className = 'title';
     titleEl.textContent = p.title;
 
-    const categoryEl = document.createElement('div');
-    categoryEl.className = 'category';
-    categoryEl.textContent = p.category;
+    const descEl = document.createElement('p');
+    descEl.className = 'description';
+    descEl.textContent = p.shortDescription;
 
-    info.appendChild(titleEl);
     info.appendChild(categoryEl);
+    info.appendChild(titleEl);
+    info.appendChild(descEl);
 
     a.appendChild(imgWrap);
     a.appendChild(info);
@@ -657,17 +593,26 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Scroll Reveal for Section Titles
   const revealTexts = document.querySelectorAll('.reveal-text[data-reveal]');
   revealTexts.forEach(el => {
-    const text = el.textContent.trim();
-    const words = text.split(/\s+/);
+    // Preserve <br> by splitting around them and spaces
+    const content = el.innerHTML.trim();
+    const parts = content.split(/(\s+|<br\s*\/?>)/i);
     el.innerHTML = '';
 
-    words.forEach((word, i) => {
-      const span = document.createElement('span');
-      span.textContent = word + (i < words.length - 1 ? '\u00A0' : '');
-      el.appendChild(span);
+    parts.forEach((part) => {
+      if (!part) return;
+
+      if (part.toLowerCase().startsWith('<br')) {
+        el.innerHTML += part;
+      } else if (part.trim() === '') {
+        // Use a single regular space to separate words
+        el.innerHTML += ' ';
+      } else {
+        const span = document.createElement('span');
+        span.textContent = part;
+        el.appendChild(span);
+      }
     });
 
     const observer = new IntersectionObserver((entries) => {
@@ -932,5 +877,44 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
     }
+  }
+
+  // --- Generic Intersection Observer for Section Reveals ---
+  const revealSections = document.querySelectorAll('.contact-cta, .footer-premium');
+  if (revealSections.length > 0) {
+    const sectionObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('active');
+          sectionObserver.unobserve(entry.target);
+        }
+      });
+    }, {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    });
+
+    revealSections.forEach(section => sectionObserver.observe(section));
+  }
+
+  // --- Click-to-Copy Email Functionality ---
+  const emailLink = document.querySelector('.email-link');
+  if (emailLink) {
+    emailLink.addEventListener('click', (e) => {
+      // If user wants normal mailto behavior, we don't preventDefault
+      // But we always copy the text
+      const emailToCopy = emailLink.getAttribute('data-copy');
+      if (emailToCopy) {
+        navigator.clipboard.writeText(emailToCopy).then(() => {
+          const feedback = emailLink.querySelector('.copy-feedback');
+          if (feedback) {
+            feedback.classList.add('show');
+            setTimeout(() => {
+              feedback.classList.remove('show');
+            }, 2000);
+          }
+        });
+      }
+    });
   }
 });

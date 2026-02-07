@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Dynamic SEO Meta Tags -->
+    <title id="page-title">Project Showcase | Rish Designs</title>
+    <meta name="description" content="View project showcase" id="page-description">
+    <meta property="og:title" content="Project Showcase | Rish Designs" id="og-title">
+    <meta property="og:description" content="" id="og-description">
+    <meta property="og:image" content="" id="og-image">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Instrument+Sans:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="../css/project-templates.css">
+</head>
+
+<body class="template-project-showcase">
+
+    <!-- Back Navigation -->
+    <nav class="back-nav" id="backNav">
+        <div class="container">
+            <a href="../index.html#selected-work" class="back-link">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                <span>Back to Selected Work</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Loading State -->
+    <div id="loading" class="loading-state">
+        <div class="loading-spinner"></div>
+        <p>Loading project...</p>
+    </div>
+
+    <!-- 404 Error -->
+    <div id="error-404" class="error-404" style="display: none;">
+        <div class="container">
+            <h1>404</h1>
+            <h2>Project Not Found</h2>
+            <p>The project you're looking for doesn't exist.</p>
+            <a href="../index.html#selected-work" class="btn primary">Back to Selected Work</a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main id="project-content" class="project-content" style="display: none;">
+
+        <!-- Hero Section -->
+        <section class="project-hero simple-hero">
+            <div class="container-wide">
+                <div class="hero-content">
+                    <span class="project-category" id="project-category">CATEGORY</span>
+                    <h1 class="project-title" id="project-title">Project Title</h1>
+                    <p class="project-description" id="project-description">Project description...</p>
+                </div>
+
+                <div class="hero-image-wrap">
+                    <img id="hero-image" src="" alt="" class="hero-image">
+                </div>
+            </div>
+        </section>
+
+        <!-- Project Info + Gallery Layout -->
+        <section class="project-main-section">
+            <div class="container-wide">
+                <div class="project-layout">
+
+                    <!-- Sidebar Info -->
+                    <aside class="project-info-sidebar">
+                        <div class="info-card">
+                            <h3 class="info-heading">Project Info</h3>
+                            <div class="info-items">
+                                <div class="info-item">
+                                    <span class="info-label">Role</span>
+                                    <span class="info-value" id="meta-role">Role</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Platform</span>
+                                    <span class="info-value" id="meta-platform">Platform</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Timeline</span>
+                                    <span class="info-value" id="meta-timeline">Timeline</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Team</span>
+                                    <span class="info-value" id="meta-team">Team</span>
+                                </div>
+                            </div>
+
+                            <!-- External Links (conditionally rendered) -->
+                            <div id="external-links-container"></div>
+                        </div>
+                    </aside>
+
+                    <!-- Visual Gallery -->
+                    <div class="project-gallery">
+                        <h2 class="gallery-heading">Visual Showcase</h2>
+                        <div class="gallery-grid" id="gallery-grid"></div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer CTA -->
+        <section class="project-footer">
+            <div class="container">
+                <a href="../index.html#selected-work" class="btn primary large">View More Projects</a>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Project Page Loader -->
+    <script type="module" src="../js/projectPageLoader.js"></script>
+
+</body>
+
+</html>
