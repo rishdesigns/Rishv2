@@ -30,53 +30,111 @@ export const selectedWorkProjects = [
         team: '1 Designer, 2 Developers, 1 PM',
         externalLinks: {
             behance: 'https://www.behance.net/gallery/call-recording-app', // Sample Behance link
-            dribbble: null
+            dribbble: 'https://www.behance.net/gallery/call-recording-app'
         },
         seoMeta: {
             title: 'Call Recording App - UX Case Study | Rish Designs',
             description: 'Deep dive into designing an intelligent call recording app with AI-powered transcription and insights for iOS and Android.'
         },
-        // NEW: Modular Section Toggles
+        // Modular Section Toggles — set true/false to show/hide
         sections: {
             overview: true,
-            competitiveAnalysis: true,
-            userFlow: true,
+            problem: true,
+            goals: true,
+            research: true,
+            strategy: true,
             wireframes: true,
-            highFidelity: true,
-            outcomes: true
+            finalDesign: true,
+            uxDecisions: true,
+            impact: true,
+            learnings: true
         },
-        // NEW: Image-First Section Content
+        // Section Content — fill in data for each enabled section
         sectionContent: {
             overview: {
-                title: 'Overview',
+                title: 'Project Overview',
                 text: 'Designed a seamless mobile experience for professionals to record, transcribe, and extract insights from their phone conversations.',
-                images: ['Assets/Call%20recording%20app%20Rish%20Designs.png'],
-                layout: 'stacked'
+                role: 'Lead UX/UI Designer',
+                tools: ['Figma', 'FigJam', 'Maze', 'Notion', 'Lottie'],
+                responsibilities: [
+                    'User Research',
+                    'Strategy',
+                    'Information Architecture',
+                    'UX Audit',
+                    'Wireframes',
+                    'Illustration',
+                    'UI Design',
+                    'Prototyping & Usability Testing'
+                ]
             },
-            competitiveAnalysis: {
-                title: 'Competitive Analysis',
-                description: 'Analyzing existing solutions to identify gaps in transcription accuracy and user experience.',
-                images: ['Assets/Call%20recording%20app%20Rish%20Designs.png'],
-                layout: 'full-width'
+            problem: {
+                label: 'The Challenge',
+                headline: 'Professionals were spending <span class="highlight">3+ hours per week</span> manually reviewing call recordings across fragmented tools.',
+                text: 'Existing solutions were clunky and unreliable \u2014 complicated onboarding, poor transcription quality, and zero intelligent organization. <strong>78% of users</strong> abandoned recording apps within the first week due to friction. Our challenge was to build an always-ready, intelligent recording tool that could transcribe and surface key moments automatically.'
             },
-            userFlow: {
-                title: 'User Flow',
-                description: 'A streamlined architecture ensuring recording is always one tap away.',
-                images: ['Assets/Call%20recording%20app%20Rish%20Designs.png'],
-                layout: 'full-width'
+            goals: {
+                title: 'Goals',
+                categories: [
+                    {
+                        icon: '\uD83D\uDCCB',
+                        title: 'Business Goals',
+                        items: [
+                            'Achieve 90%+ transcription accuracy',
+                            'Reduce time-to-insight by 60%',
+                            'Increase user retention past first week',
+                            'Build a searchable archive as accessible as email'
+                        ]
+                    },
+                    {
+                        icon: '\u2764\uFE0F',
+                        title: 'User Goals',
+                        items: [
+                            'One-tap recording from any screen',
+                            'Instant searchable transcripts',
+                            'Smart tagging of action items',
+                            'Effortless sharing of key moments'
+                        ]
+                    }
+                ]
+            },
+            research: {
+                title: 'Research & Discovery',
+                text: 'Conducted 15 in-depth user interviews with sales professionals, consultants, and journalists to understand their call workflows. Ran a competitive analysis of 8 existing recording apps, identifying common UX pitfalls: complicated onboarding, poor transcription quality, and lack of intelligent organization. Survey data from 200+ respondents confirmed that 78% of users abandon recording apps within the first week due to friction.',
+                images: [
+                    'Assets/Liquid%20Glass%20UI%20Rish%20Designs.png',
+                    'Assets/Call%20recording%20app%20Rish%20Designs.png'
+                ],
+                layout: 'grid-2'
+            },
+            strategy: {
+                title: 'Strategy',
+                items: [
+                    {
+                        title: 'Simplify Recording',
+                        text: 'Reduced the recording flow from 3 steps to a single tap. A persistent, minimal recording widget stays accessible across all screens without disrupting workflow.'
+                    },
+                    {
+                        title: 'AI-First Transcription',
+                        text: 'Built the core experience around automatic transcription with smart tagging. Action items, decisions, and follow-ups are surfaced within seconds of a call ending.'
+                    },
+                    {
+                        title: 'Searchable Archive',
+                        text: 'Transformed static recordings into a searchable, taggable knowledge base. Users can find any conversation moment as easily as searching email.'
+                    }
+                ]
             },
             wireframes: {
-                title: 'Wireframes',
-                description: 'Iterating through layouts to find the most intuitive playback experience.',
+                title: 'Wireframes & Iterations',
+                description: 'Iterated through 3 major layout directions for the recording interface and playback experience, testing each with 5 users.',
                 images: [
                     'Assets/Call%20recording%20app%20Rish%20Designs.png',
                     'Assets/Call%20recording%20app%20Rish%20Designs.png'
                 ],
                 layout: 'grid-2'
             },
-            highFidelity: {
-                title: 'High-Fidelity Designs',
-                description: 'Final immersive visuals with dark mode support and clear information hierarchy.',
+            finalDesign: {
+                title: 'Final Design',
+                description: 'The polished high-fidelity interface with dark mode, clear hierarchy, and immersive audio waveform visualizations.',
                 images: [
                     'Assets/Call%20recording%20app%20Rish%20Designs.png',
                     'Assets/Call%20recording%20app%20Rish%20Designs.png',
@@ -84,17 +142,46 @@ export const selectedWorkProjects = [
                 ],
                 layout: 'stacked'
             },
-            outcomes: {
-                title: 'Outcomes',
+            uxDecisions: {
+                title: 'Key UX Decisions',
+                items: [
+                    {
+                        title: 'One-Tap Recording',
+                        text: 'Reduced recording initiation to a single tap from the home screen. Eliminated the 3-step flow from competitors that caused users to miss the start of conversations.',
+                        image: 'Assets/Call%20recording%20app%20Rish%20Designs.png'
+                    },
+                    {
+                        title: 'AI-Powered Smart Tags',
+                        text: 'Implemented automatic tagging of action items, decisions, and follow-ups within transcripts. This reduced review time from 15 minutes to under 3 minutes per call.',
+                        image: 'Assets/Call%20recording%20app%20Rish%20Designs.png'
+                    },
+                    {
+                        title: 'Progressive Disclosure',
+                        text: 'The playback screen initially shows a clean waveform and transcript. Advanced features (export, share, edit tags) are revealed contextually to avoid overwhelming new users.',
+                        image: null
+                    }
+                ]
+            },
+            impact: {
+                title: 'Impact & Results',
+                text: 'The redesigned app saw significant improvements across all key metrics within the first 3 months of launch, validating the research-driven design approach.',
                 metrics: [
                     { value: '92%', label: 'Transcription Accuracy' },
                     { value: '4.7', label: 'App Store Rating' },
                     { value: '10K+', label: 'Monthly Active Users' }
                 ],
                 testimonial: {
-                    quote: 'This app has transformed how I handle client calls. The transcription is incredibly accurate.',
+                    quote: 'This app has transformed how I handle client calls. The transcription is incredibly accurate and the smart tags save me hours every week.',
                     author: 'Sarah M., Business Consultant'
                 }
+            },
+            learnings: {
+                title: 'Key Learnings',
+                items: [
+                    'Early prototyping with real audio data was critical \u2014 synthetic test data hid transcription UX issues that only surfaced with real conversations.',
+                    'Users strongly preferred progressive disclosure over feature-rich dashboards. Simplicity won over power-user features in every round of testing.',
+                    'The biggest retention driver was not recording quality, but the AI-powered review experience \u2014 making past calls searchable was the killer feature.'
+                ]
             }
         }
     },
@@ -118,8 +205,8 @@ export const selectedWorkProjects = [
         timeline: '2 weeks',
         team: 'Solo project',
         externalLinks: {
-            behance: null,
-            dribbble: null
+            behance: 'https://www.behance.net/gallery/call-recording-app',
+            dribbble: 'https://www.behance.net/gallery/call-recording-app',
         },
         seoMeta: {
             title: 'Christmas UI - Festive Landing Page Design | Rish Designs',
@@ -183,27 +270,60 @@ export const selectedWorkProjects = [
         },
         sections: {
             overview: true,
-            competitiveAnalysis: false,
-            userFlow: true,
+            problem: true,
+            goals: true,
+            research: false,
+            strategy: false,
             wireframes: false,
-            highFidelity: true,
-            outcomes: true
+            finalDesign: true,
+            uxDecisions: false,
+            impact: true,
+            learnings: true
         },
         sectionContent: {
             overview: {
                 title: 'Project Overview',
                 text: 'Fitness Track is an app that helps users track their physical activity while rewarding them for making sustainable travel choices.',
-                images: ['Assets/Fitness%20app%20UI.png'],
-                layout: 'constrained'
+                role: 'UX/UI Designer',
+                tools: ['Figma', 'Miro', 'Principle'],
+                responsibilities: [
+                    'User Research',
+                    'Wireframes',
+                    'UI Design',
+                    'Prototyping',
+                    'Usability Testing'
+                ]
             },
-            userFlow: {
-                title: 'Streamlined Experience',
-                description: 'Intuitive navigation paths for logging activities and monitoring progress.',
-                images: ['Assets/Fitness%20app%20UI.png'],
-                layout: 'full-width'
+            problem: {
+                label: 'The Challenge',
+                headline: 'Most fitness apps focus purely on exercise metrics while ignoring the <span class="highlight">environmental impact</span> of daily travel choices.',
+                text: 'Users lacked a holistic view connecting their physical activity with sustainable habits, leading to lower motivation and engagement. Our challenge was to create a unified experience that bridges fitness tracking and environmental awareness.'
             },
-            highFidelity: {
-                title: 'High-Fidelity Interface',
+            goals: {
+                title: 'Goals',
+                categories: [
+                    {
+                        icon: '\uD83C\uDFAF',
+                        title: 'Business Goals',
+                        items: [
+                            'Achieve 60%+ 7-day retention',
+                            'Differentiate from pure fitness apps',
+                            'Drive organic growth through social features'
+                        ]
+                    },
+                    {
+                        icon: '\uD83C\uDF31',
+                        title: 'User Goals',
+                        items: [
+                            'Unified fitness + sustainability tracking',
+                            'Motivating reward mechanics',
+                            'Simple interface during workouts'
+                        ]
+                    }
+                ]
+            },
+            finalDesign: {
+                title: 'Final Design',
                 description: 'Vibrant, motivating visuals designed for clarity during workouts.',
                 images: [
                     'Assets/Fitness%20app%20UI.png',
@@ -211,8 +331,9 @@ export const selectedWorkProjects = [
                 ],
                 layout: 'grid-2'
             },
-            outcomes: {
-                title: 'The Result',
+            impact: {
+                title: 'Impact & Results',
+                text: 'The gamified approach to combining fitness with environmental awareness resonated strongly with the target audience.',
                 metrics: [
                     { value: '65%', label: '7-Day Retention' },
                     { value: '4.3', label: 'Average Rating' },
@@ -222,6 +343,13 @@ export const selectedWorkProjects = [
                     quote: 'Finally a fitness app that makes me want to walk more and actually shows my environmental impact!',
                     author: 'Mike R., Early Adopter'
                 }
+            },
+            learnings: {
+                title: 'Key Learnings',
+                items: [
+                    'Gamification mechanics need to be carefully balanced \u2014 too many rewards dilute their motivational impact.',
+                    'Users preferred simple progress visuals over complex data dashboards during active workout sessions.'
+                ]
             }
         }
     },

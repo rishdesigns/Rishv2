@@ -59,60 +59,33 @@
     <!-- Main Content -->
     <main id="project-content" class="project-content" style="display: none;">
 
-        <!-- Hero Section -->
-        <section class="project-hero simple-hero">
+        <!-- Hero Section — 2-column layout -->
+        <header class="project-header">
             <div class="container-wide">
-                <div class="hero-content">
-                    <span class="project-category" id="project-category">CATEGORY</span>
-                    <h1 class="project-title" id="project-title">Project Title</h1>
-                    <p class="project-description" id="project-description">Project description...</p>
-                </div>
-
-                <div class="hero-image-wrap">
-                    <img id="hero-image" src="" alt="" class="hero-image">
+                <div class="hero-grid">
+                    <div class="hero-text">
+                        <div class="category-badge" id="project-category">
+                            <span class="category-dot"></span>
+                            <span>CATEGORY</span>
+                        </div>
+                        <h1 class="project-title" id="project-title">Project Title</h1>
+                        <p class="project-description" id="project-description">Description</p>
+                        <div class="hero-meta-pills" id="hero-meta-pills"></div>
+                        <div class="hero-ctas" id="hero-ctas"></div>
+                    </div>
+                    <div class="hero-image-wrapper">
+                        <img id="hero-image" class="hero-image" src="" alt="" loading="lazy">
+                    </div>
                 </div>
             </div>
-        </section>
+        </header>
 
-        <!-- Project Info + Gallery Layout -->
+        <!-- Visual Gallery Section -->
         <section class="project-main-section">
             <div class="container-wide">
-                <div class="project-layout">
-
-                    <!-- Sidebar Info -->
-                    <aside class="project-info-sidebar">
-                        <div class="info-card">
-                            <h3 class="info-heading">Project Info</h3>
-                            <div class="info-items">
-                                <div class="info-item">
-                                    <span class="info-label">Role</span>
-                                    <span class="info-value" id="meta-role">Role</span>
-                                </div>
-                                <div class="info-item">
-                                    <span class="info-label">Platform</span>
-                                    <span class="info-value" id="meta-platform">Platform</span>
-                                </div>
-                                <div class="info-item">
-                                    <span class="info-label">Timeline</span>
-                                    <span class="info-value" id="meta-timeline">Timeline</span>
-                                </div>
-                                <div class="info-item">
-                                    <span class="info-label">Team</span>
-                                    <span class="info-value" id="meta-team">Team</span>
-                                </div>
-                            </div>
-
-                            <!-- External Links (conditionally rendered) -->
-                            <div id="external-links-container"></div>
-                        </div>
-                    </aside>
-
-                    <!-- Visual Gallery -->
-                    <div class="project-gallery">
-                        <h2 class="gallery-heading">Visual Showcase</h2>
-                        <div class="gallery-grid" id="gallery-grid"></div>
-                    </div>
-
+                <div class="project-gallery">
+                    <h2 class="gallery-heading">Visual Showcase</h2>
+                    <div class="gallery-grid" id="gallery-grid"></div>
                 </div>
             </div>
         </section>

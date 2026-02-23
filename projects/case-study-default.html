@@ -28,7 +28,7 @@
 <body class="template-case-study-behance">
 
     <!-- Back Navigation -->
-    <nav class="back-nav">
+    <nav class="back-nav" id="backNav">
         <div class="nav-container">
             <a href="../index.html#selected-work" class="back-link">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
@@ -59,47 +59,29 @@
     <!-- Main Content -->
     <main id="case-study-content" class="case-study-content" style="display: none;">
 
-        <!-- Header Section -->
+        <!-- Hero Section — 2-column layout -->
         <header class="case-study-header">
             <div class="header-container">
-                <h1 class="project-title" id="project-title">Project Title</h1>
-                <p class="project-description" id="project-description">Short description of the project and the problem
-                    it solves.</p>
-
-                <!-- Behance CTA (conditionally rendered) -->
-                <a id="behance-cta" href="#" target="_blank" rel="noopener" class="primary-cta" style="display: none;">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                        <path
-                            d="M22 7h-7v-2h7v2zm1.726 10c-.442 1.297-2.029 3-5.101 3-3.074 0-5.564-1.729-5.564-5.675 0-3.91 2.325-5.92 5.466-5.92 3.082 0 4.964 1.782 5.375 4.426.078.506.109 1.188.095 2.14h-8.027c.13 3.211 3.483 3.312 4.588 2.029h3.168zm-7.686-4h4.965c-.105-1.547-1.136-2.219-2.477-2.219-1.466 0-2.277.768-2.488 2.219zm-9.574 6.988h-6.466v-14.967h6.953c5.476.081 5.58 5.444 2.72 6.906 3.461 1.26 3.577 8.061-3.207 8.061zm-3.466-8.988h3.584c2.508 0 2.906-3-.312-3h-3.272v3zm3.391 3h-3.391v3.016h3.341c3.055 0 2.868-3.016.05-3.016z" />
-                    </svg>
-                    <span>View on Behance</span>
-                </a>
-            </div>
-        </header>
-
-        <!-- Meta Info Section -->
-        <section class="project-meta-section">
-            <div class="meta-container">
-                <div class="meta-grid">
-                    <div class="meta-item">
-                        <span class="meta-label">Role</span>
-                        <span class="meta-value" id="meta-role">—</span>
+                <div class="hero-grid">
+                    <div class="hero-text">
+                        <div class="category-badge" id="project-category">
+                            <span class="category-dot"></span>
+                            <span>CATEGORY</span>
+                        </div>
+                        <h1 class="project-title" id="project-title">Project Title</h1>
+                        <p class="project-description" id="project-description">Description</p>
+                        <div class="hero-meta-pills" id="hero-meta-pills"></div>
+                        <div class="hero-ctas" id="hero-ctas"></div>
                     </div>
-                    <div class="meta-item">
-                        <span class="meta-label">Platform</span>
-                        <span class="meta-value" id="meta-platform">—</span>
-                    </div>
-                    <div class="meta-item">
-                        <span class="meta-label">Timeline</span>
-                        <span class="meta-value" id="meta-timeline">—</span>
-                    </div>
-                    <div class="meta-item">
-                        <span class="meta-label">Team</span>
-                        <span class="meta-value" id="meta-team">—</span>
+                    <div class="hero-image-wrapper">
+                        <img id="hero-image" class="hero-image" src="" alt="" loading="lazy">
                     </div>
                 </div>
             </div>
-        </section>
+        </header>
+
+        <!-- Divider -->
+        <hr class="hero-divider">
 
         <!-- Dynamic Sections Container -->
         <div id="case-study-sections" class="case-study-sections">
