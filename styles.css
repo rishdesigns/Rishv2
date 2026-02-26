@@ -8,8 +8,7 @@
 }
 
 
-/* Fonts: Outfit for Heading/UI, Instrument Sans for Body */
-@import url('https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Outfit:wght@300;400;600;700;800&display=swap');
+/* Fonts loaded via JS in index.html to avoid render-blocking */
 
 @property --glow-1 {
   syntax: '<color>';
@@ -196,14 +195,15 @@ body {
   position: absolute;
   left: 50%;
   top: 0;
-  width: 140vmax;
-  height: 120vmax;
+  width: 100vmax;
+  height: 80vmax;
   background: radial-gradient(circle at center, var(--glow-1), transparent 55%);
-  filter: blur(110px);
+  filter: blur(80px);
   pointer-events: none;
   z-index: 1;
   transform: translate(-50%, -40%);
   animation: floatOrb1 20s ease-in-out infinite alternate;
+  will-change: transform;
 }
 
 .hero::after {
@@ -211,15 +211,16 @@ body {
   position: absolute;
   right: 50%;
   top: 0;
-  width: 100vmax;
-  height: 100vmax;
+  width: 80vmax;
+  height: 80vmax;
   background: radial-gradient(circle at center, rgba(139, 92, 246, 0.15), transparent 50%);
-  filter: blur(120px);
+  filter: blur(90px);
   pointer-events: none;
   opacity: 0.6;
   z-index: 1;
   transform: translate(50%, -30%);
   animation: floatOrb2 22s ease-in-out infinite alternate-reverse;
+  will-change: transform;
 }
 
 /* Dedicated gradient block placed at top of header for precise control */
@@ -3841,4 +3842,39 @@ body {
     text-align: center;
     padding: 30px 5%;
   }
+}
+
+/* ===================================================================
+   PERFORMANCE: Skip rendering work for off-screen sections
+   content-visibility: auto tells the browser to defer layout/paint
+   for elements not in (or near) the viewport.
+   =================================================================== */
+#selected-work {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 800px;
+}
+
+#about {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 1200px;
+}
+
+#capabilities {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 600px;
+}
+
+.capabilities-spacer {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 1000px;
+}
+
+#contact {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 500px;
+}
+
+.footer-premium {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 400px;
 }
