@@ -6,6 +6,15 @@
 import { selectedWorkProjects } from './data/selectedWorkProjects.js';
 
 document.addEventListener('DOMContentLoaded', () => {
+  // Helper: yield to main thread between init phases to reduce TBT
+  const deferInit = (fn) => {
+    if ('requestIdleCallback' in window) {
+      requestIdleCallback(fn, { timeout: 200 });
+    } else {
+      setTimeout(fn, 0);
+    }
+  };
+
   // Animate heading by splitting text into spans for per-letter stagger
   const nameEl = document.querySelector('.name');
   if (nameEl) {
@@ -258,7 +267,8 @@ document.addEventListener('DOMContentLoaded', () => {
     return originalW;
   };
 
-  let loopWidth = ensureLoop();
+  // Defer ensureLoop to window load to avoid layout thrashing during DOMContentLoaded
+  let loopWidth = 0;
 
   // Scrolling using requestAnimationFrame with delta-time for "liquid" smoothness
   let px = 0; // current translation
@@ -293,9 +303,10 @@ document.addEventListener('DOMContentLoaded', () => {
     raf = requestAnimationFrame(step);
   }
 
-  // Defer strip animation to after full page load to reduce TBT
+  // Defer strip cloning + animation to after full page load to reduce TBT
   let raf;
   window.addEventListener('load', () => {
+    loopWidth = ensureLoop();
     lastTime = performance.now();
     raf = requestAnimationFrame(step);
   });
@@ -636,40 +647,43 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  const revealTexts = document.querySelectorAll('.reveal-text[data-reveal]');
-  revealTexts.forEach(el => {
-    // Preserve <br> by splitting around them and spaces
-    const content = el.innerHTML.trim();
-    const parts = content.split(/(\s+|<br\s*\/?>)/i);
-    el.innerHTML = '';
+  // Defer reveal-text processing to idle time (heavyweight DOM manipulation)
+  deferInit(() => {
+    const revealTexts = document.querySelectorAll('.reveal-text[data-reveal]');
+    revealTexts.forEach(el => {
+      // Preserve <br> by splitting around them and spaces
+      const content = el.innerHTML.trim();
+      const parts = content.split(/(\s+|<br\s*\/?>)/i);
+      el.innerHTML = '';
 
-    parts.forEach((part) => {
-      if (!part) return;
+      parts.forEach((part) => {
+        if (!part) return;
 
-      if (part.toLowerCase().startsWith('<br')) {
-        el.innerHTML += part;
-      } else if (part.trim() === '') {
-        // Use a single regular space to separate words
-        el.innerHTML += ' ';
-      } else {
-        const span = document.createElement('span');
-        span.textContent = part;
-        el.appendChild(span);
-      }
-    });
-
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          el.classList.add('active');
-          observer.unobserve(entry.target);
+        if (part.toLowerCase().startsWith('<br')) {
+          el.innerHTML += part;
+        } else if (part.trim() === '') {
+          // Use a single regular space to separate words
+          el.innerHTML += ' ';
+        } else {
+          const span = document.createElement('span');
+          span.textContent = part;
+          el.appendChild(span);
         }
       });
-    }, {
-      threshold: 0.1
-    });
 
-    observer.observe(el);
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            el.classList.add('active');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, {
+        threshold: 0.1
+      });
+
+      observer.observe(el);
+    });
   });
 
   // --- About Me Section Logic ---
@@ -714,295 +728,301 @@ document.addEventListener('DOMContentLoaded', () => {
     globeObserver.observe(globeSection);
   }
 
-  // 2. Intersection Observer for About Cards
-  const aboutCards = document.querySelectorAll('.about-card');
-  if (aboutCards.length > 0) {
-    const aboutObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-          aboutObserver.unobserve(entry.target);
-        }
-      });
-    }, {
-      threshold: 0.15,
-      rootMargin: '0px 0px -50px 0px'
-    });
-
-    aboutCards.forEach((card, i) => {
-      // Set staggered transition delay
-      card.style.transitionDelay = `${i * 100}ms`;
-      aboutObserver.observe(card);
-
-      // Magnetic 3D Tilt & Spotlight Logic
-      card.addEventListener('mousemove', (e) => {
-        const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-
-        // Calculate percentage for spotlight
-        const percentX = (x / rect.width) * 100;
-        const percentY = (y / rect.height) * 100;
-
-        // Calculate tilt (max 10 degrees)
-        const tiltX = (y / rect.height - 0.5) * -15; // Inverted for natural feel
-        const tiltY = (x / rect.width - 0.5) * 15;
-
-        card.style.setProperty('--mouse-x', `${percentX}%`);
-        card.style.setProperty('--mouse-y', `${percentY}%`);
-        card.style.setProperty('--tilt-x', `${tiltX}deg`);
-        card.style.setProperty('--tilt-y', `${tiltY}deg`);
-      });
-
-      card.addEventListener('mouseleave', () => {
-        // Smoothly reset tilt
-        card.style.setProperty('--tilt-x', `0deg`);
-        card.style.setProperty('--tilt-y', `0deg`);
-      });
-    });
-  }
-
-  // --- Capabilities Section Logic (Horizontal Scroll & Hover Preview) ---
-  const capabilitySect = document.getElementById('capabilities');
-  const capSpacer = document.querySelector('.capabilities-spacer');
-  const capSticky = document.querySelector('.capabilities-sticky');
-  const capRail = document.getElementById('capabilitiesRail');
-  const capIntro = document.getElementById('capabilitiesIntro');
-  const capPanelsWrapper = document.querySelector('.capabilities-panels-wrapper');
-  const hoverPreview = document.getElementById('hover-preview');
-
-  if (capabilitySect && capSpacer && capRail && capIntro && capPanelsWrapper) {
-    const panels = document.querySelectorAll('.service-panel');
-    const panelCount = panels.length;
-
-    // Calculate and set spacer height
-    const calculateSpacerHeight = () => {
-      if (window.innerWidth > 768) {
-        // Extra 100vh for intro slide + 150vh per panel for scroll
-        const spacerHeight = 100 + (panelCount * 150);
-        capSpacer.style.height = `${spacerHeight}vh`;
-      } else {
-        capSpacer.style.height = 'auto';
-      }
-    };
-
-    calculateSpacerHeight();
-
-    // Handle scroll transitions
-    const handleScroll = () => {
-      if (window.innerWidth > 768) {
-        const spacerRect = capSpacer.getBoundingClientRect();
-        const spacerTop = spacerRect.top;
-        const spacerHeight = spacerRect.height;
-        const viewportHeight = window.innerHeight;
-
-        // Calculate overall progress (0 to 1)
-        const scrollableDistance = spacerHeight - viewportHeight;
-        const scrolled = -spacerTop;
-        const overallProgress = Math.max(0, Math.min(1, scrolled / scrollableDistance));
-
-        // Intro fade threshold: 0-15% of total scroll
-        const introFadeThreshold = 0.15;
-
-        if (overallProgress < introFadeThreshold) {
-          // Show intro, hide panels
-          const introOpacity = 1 - (overallProgress / introFadeThreshold);
-          capIntro.style.opacity = introOpacity;
-          capPanelsWrapper.classList.remove('active');
-        } else {
-          // Hide intro, show panels
-          capIntro.classList.add('fade-out');
-          capPanelsWrapper.classList.add('active');
-
-          // Calculate panels scroll progress (15% onwards)
-          const panelsStartProgress = introFadeThreshold;
-          const panelsProgress = (overallProgress - panelsStartProgress) / (1 - panelsStartProgress);
-          const clampedPanelsProgress = Math.max(0, Math.min(1, panelsProgress));
-
-          // Horizontal translation
-          const railWidth = capRail.scrollWidth;
-          const viewportWidth = window.innerWidth;
-          const maxScroll = railWidth - viewportWidth;
-
-          const translateX = clampedPanelsProgress * maxScroll;
-
-          // Use combined transform for GPU acceleration (translateX + centering translateY)
-          capRail.style.transform = `translate3d(${-translateX}px, -50%, 0)`;
-          capRail.style.webkitTransform = `translate3d(${-translateX}px, -50%, 0)`;
-        }
-      } else {
-        // Mobile: Reset all inline styles to let CSS take over
-        capIntro.style.opacity = '';
-        capIntro.classList.remove('fade-out');
-        capPanelsWrapper.classList.add('active');
-        capRail.style.transform = '';
-        capRail.style.webkitTransform = '';
-      }
-    };
-
-    // Throttled scroll handler for performance
-    let scrollTicking = false;
-    const onScroll = () => {
-      if (!scrollTicking) {
-        requestAnimationFrame(() => {
-          handleScroll();
-          scrollTicking = false;
-        });
-        scrollTicking = true;
-      }
-    };
-
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', () => {
-      calculateSpacerHeight();
-      handleScroll();
-    });
-
-    // Initial call
-    handleScroll();
-
-    // 2. Hover Image Preview Logic (Desktop Only)
-    let mouseX = 0;
-    let mouseY = 0;
-    let previewX = 0;
-    let previewY = 0;
-    let currentImages = [];
-    let imageIdx = 0;
-    let imageInterval;
-
-    // Follow mouse with delay (lerp) — only runs while a panel is hovered
-    let previewRaf = null;
-    const animatePreview = () => {
-      if (window.innerWidth <= 768) {
-        previewRaf = null;
-        return; // Never run on mobile
-      }
-      const ease = 0.12; // 120ms-ish delay feel
-      previewX += (mouseX - previewX) * ease;
-      previewY += (mouseY - previewY) * ease;
-
-      // Offset preview from cursor
-      hoverPreview.style.left = `${previewX + 24}px`;
-      hoverPreview.style.top = `${previewY - 120}px`;
-      previewRaf = requestAnimationFrame(animatePreview);
-    };
-
-    const startPreviewLoop = () => {
-      if (!previewRaf && window.innerWidth > 768) {
-        previewRaf = requestAnimationFrame(animatePreview);
-      }
-    };
-    const stopPreviewLoop = () => {
-      if (previewRaf) {
-        cancelAnimationFrame(previewRaf);
-        previewRaf = null;
-      }
-    };
-
-    const switchPreviewImage = () => {
-      if (currentImages.length <= 1) return;
-
-      const activeImg = hoverPreview.querySelector('.preview-img.active');
-      const nextImg = hoverPreview.querySelector('.preview-img:not(.active)');
-
-      imageIdx = (imageIdx + 1) % currentImages.length;
-      nextImg.src = currentImages[imageIdx];
-
-      // Crossfade
-      nextImg.classList.add('active');
-      activeImg.classList.remove('active');
-    };
-
-    panels.forEach(panel => {
-      panel.addEventListener('mouseenter', (e) => {
-        if (window.innerWidth <= 768) {
-          // Mobile: Reveal on tap
-          panels.forEach(p => p.classList.remove('active'));
-          panel.classList.add('active');
-          return;
-        }
-
-        hoverPreview.classList.add('active');
-        startPreviewLoop(); // Start RAF loop on hover
-
-        const imagesStr = panel.getAttribute('data-images');
-        currentImages = imagesStr ? imagesStr.split(',') : [];
-        imageIdx = 0;
-
-        if (currentImages.length > 0) {
-          const activeImg = hoverPreview.querySelector('.preview-img.active');
-          activeImg.src = currentImages[0];
-
-          if (currentImages.length > 1) {
-            clearInterval(imageInterval);
-            imageInterval = setInterval(switchPreviewImage, 2000);
+  // 2. Intersection Observer for About Cards — deferred to idle time
+  deferInit(() => {
+    const aboutCards = document.querySelectorAll('.about-card');
+    if (aboutCards.length > 0) {
+      const aboutObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            aboutObserver.unobserve(entry.target);
           }
+        });
+      }, {
+        threshold: 0.15,
+        rootMargin: '0px 0px -50px 0px'
+      });
+
+      aboutCards.forEach((card, i) => {
+        // Set staggered transition delay
+        card.style.transitionDelay = `${i * 100}ms`;
+        aboutObserver.observe(card);
+
+        // Magnetic 3D Tilt & Spotlight Logic
+        card.addEventListener('mousemove', (e) => {
+          const rect = card.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+
+          // Calculate percentage for spotlight
+          const percentX = (x / rect.width) * 100;
+          const percentY = (y / rect.height) * 100;
+
+          // Calculate tilt (max 10 degrees)
+          const tiltX = (y / rect.height - 0.5) * -15; // Inverted for natural feel
+          const tiltY = (x / rect.width - 0.5) * 15;
+
+          card.style.setProperty('--mouse-x', `${percentX}%`);
+          card.style.setProperty('--mouse-y', `${percentY}%`);
+          card.style.setProperty('--tilt-x', `${tiltX}deg`);
+          card.style.setProperty('--tilt-y', `${tiltY}deg`);
+        });
+
+        card.addEventListener('mouseleave', () => {
+          // Smoothly reset tilt
+          card.style.setProperty('--tilt-x', `0deg`);
+          card.style.setProperty('--tilt-y', `0deg`);
+        });
+      });
+    }
+  });
+
+  // --- Capabilities Section Logic (Horizontal Scroll & Hover Preview) --- deferred
+  deferInit(() => {
+    const capabilitySect = document.getElementById('capabilities');
+    const capSpacer = document.querySelector('.capabilities-spacer');
+    const capSticky = document.querySelector('.capabilities-sticky');
+    const capRail = document.getElementById('capabilitiesRail');
+    const capIntro = document.getElementById('capabilitiesIntro');
+    const capPanelsWrapper = document.querySelector('.capabilities-panels-wrapper');
+    const hoverPreview = document.getElementById('hover-preview');
+
+    if (capabilitySect && capSpacer && capRail && capIntro && capPanelsWrapper) {
+      const panels = document.querySelectorAll('.service-panel');
+      const panelCount = panels.length;
+
+      // Calculate and set spacer height
+      const calculateSpacerHeight = () => {
+        if (window.innerWidth > 768) {
+          // Extra 100vh for intro slide + 150vh per panel for scroll
+          const spacerHeight = 100 + (panelCount * 150);
+          capSpacer.style.height = `${spacerHeight}vh`;
+        } else {
+          capSpacer.style.height = 'auto';
         }
+      };
+
+      calculateSpacerHeight();
+
+      // Handle scroll transitions
+      const handleScroll = () => {
+        if (window.innerWidth > 768) {
+          const spacerRect = capSpacer.getBoundingClientRect();
+          const spacerTop = spacerRect.top;
+          const spacerHeight = spacerRect.height;
+          const viewportHeight = window.innerHeight;
+
+          // Calculate overall progress (0 to 1)
+          const scrollableDistance = spacerHeight - viewportHeight;
+          const scrolled = -spacerTop;
+          const overallProgress = Math.max(0, Math.min(1, scrolled / scrollableDistance));
+
+          // Intro fade threshold: 0-15% of total scroll
+          const introFadeThreshold = 0.15;
+
+          if (overallProgress < introFadeThreshold) {
+            // Show intro, hide panels
+            const introOpacity = 1 - (overallProgress / introFadeThreshold);
+            capIntro.style.opacity = introOpacity;
+            capPanelsWrapper.classList.remove('active');
+          } else {
+            // Hide intro, show panels
+            capIntro.classList.add('fade-out');
+            capPanelsWrapper.classList.add('active');
+
+            // Calculate panels scroll progress (15% onwards)
+            const panelsStartProgress = introFadeThreshold;
+            const panelsProgress = (overallProgress - panelsStartProgress) / (1 - panelsStartProgress);
+            const clampedPanelsProgress = Math.max(0, Math.min(1, panelsProgress));
+
+            // Horizontal translation
+            const railWidth = capRail.scrollWidth;
+            const viewportWidth = window.innerWidth;
+            const maxScroll = railWidth - viewportWidth;
+
+            const translateX = clampedPanelsProgress * maxScroll;
+
+            // Use combined transform for GPU acceleration (translateX + centering translateY)
+            capRail.style.transform = `translate3d(${-translateX}px, -50%, 0)`;
+            capRail.style.webkitTransform = `translate3d(${-translateX}px, -50%, 0)`;
+          }
+        } else {
+          // Mobile: Reset all inline styles to let CSS take over
+          capIntro.style.opacity = '';
+          capIntro.classList.remove('fade-out');
+          capPanelsWrapper.classList.add('active');
+          capRail.style.transform = '';
+          capRail.style.webkitTransform = '';
+        }
+      };
+
+      // Throttled scroll handler for performance
+      let scrollTicking = false;
+      const onScroll = () => {
+        if (!scrollTicking) {
+          requestAnimationFrame(() => {
+            handleScroll();
+            scrollTicking = false;
+          });
+          scrollTicking = true;
+        }
+      };
+
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', () => {
+        calculateSpacerHeight();
+        handleScroll();
       });
 
-      panel.addEventListener('mouseleave', () => {
-        if (window.innerWidth <= 768) return;
+      // Initial call
+      handleScroll();
 
-        hoverPreview.classList.remove('active');
-        clearInterval(imageInterval);
-        stopPreviewLoop(); // Stop RAF loop when not hovering
+      // 2. Hover Image Preview Logic (Desktop Only)
+      let mouseX = 0;
+      let mouseY = 0;
+      let previewX = 0;
+      let previewY = 0;
+      let currentImages = [];
+      let imageIdx = 0;
+      let imageInterval;
+
+      // Follow mouse with delay (lerp) — only runs while a panel is hovered
+      let previewRaf = null;
+      const animatePreview = () => {
+        if (window.innerWidth <= 768) {
+          previewRaf = null;
+          return; // Never run on mobile
+        }
+        const ease = 0.12; // 120ms-ish delay feel
+        previewX += (mouseX - previewX) * ease;
+        previewY += (mouseY - previewY) * ease;
+
+        // Offset preview from cursor
+        hoverPreview.style.left = `${previewX + 24}px`;
+        hoverPreview.style.top = `${previewY - 120}px`;
+        previewRaf = requestAnimationFrame(animatePreview);
+      };
+
+      const startPreviewLoop = () => {
+        if (!previewRaf && window.innerWidth > 768) {
+          previewRaf = requestAnimationFrame(animatePreview);
+        }
+      };
+      const stopPreviewLoop = () => {
+        if (previewRaf) {
+          cancelAnimationFrame(previewRaf);
+          previewRaf = null;
+        }
+      };
+
+      const switchPreviewImage = () => {
+        if (currentImages.length <= 1) return;
+
+        const activeImg = hoverPreview.querySelector('.preview-img.active');
+        const nextImg = hoverPreview.querySelector('.preview-img:not(.active)');
+
+        imageIdx = (imageIdx + 1) % currentImages.length;
+        nextImg.src = currentImages[imageIdx];
+
+        // Crossfade
+        nextImg.classList.add('active');
+        activeImg.classList.remove('active');
+      };
+
+      panels.forEach(panel => {
+        panel.addEventListener('mouseenter', (e) => {
+          if (window.innerWidth <= 768) {
+            // Mobile: Reveal on tap
+            panels.forEach(p => p.classList.remove('active'));
+            panel.classList.add('active');
+            return;
+          }
+
+          hoverPreview.classList.add('active');
+          startPreviewLoop(); // Start RAF loop on hover
+
+          const imagesStr = panel.getAttribute('data-images');
+          currentImages = imagesStr ? imagesStr.split(',') : [];
+          imageIdx = 0;
+
+          if (currentImages.length > 0) {
+            const activeImg = hoverPreview.querySelector('.preview-img.active');
+            activeImg.src = currentImages[0];
+
+            if (currentImages.length > 1) {
+              clearInterval(imageInterval);
+              imageInterval = setInterval(switchPreviewImage, 2000);
+            }
+          }
+        });
+
+        panel.addEventListener('mouseleave', () => {
+          if (window.innerWidth <= 768) return;
+
+          hoverPreview.classList.remove('active');
+          clearInterval(imageInterval);
+          stopPreviewLoop(); // Stop RAF loop when not hovering
+        });
       });
-    });
 
-    window.addEventListener('mousemove', (e) => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-    }, { passive: true });
+      window.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+      }, { passive: true });
 
-    // Mobile: Toggle panel on tap
-    if (window.innerWidth <= 768) {
-      capabilitySect.addEventListener('click', (e) => {
-        const panel = e.target.closest('.service-panel');
-        if (panel) {
-          const isActive = panel.classList.contains('active');
-          panels.forEach(p => p.classList.remove('active'));
-          if (!isActive) panel.classList.add('active');
+      // Mobile: Toggle panel on tap
+      if (window.innerWidth <= 768) {
+        capabilitySect.addEventListener('click', (e) => {
+          const panel = e.target.closest('.service-panel');
+          if (panel) {
+            const isActive = panel.classList.contains('active');
+            panels.forEach(p => p.classList.remove('active'));
+            if (!isActive) panel.classList.add('active');
+          }
+        });
+      }
+    }
+  }); // end deferInit for capabilities
+
+  // --- Generic Intersection Observer for Section Reveals --- deferred
+  deferInit(() => {
+    const revealSections = document.querySelectorAll('.contact-cta, .footer-premium');
+    if (revealSections.length > 0) {
+      const sectionObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('active');
+            sectionObserver.unobserve(entry.target);
+          }
+        });
+      }, {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+      });
+
+      revealSections.forEach(section => sectionObserver.observe(section));
+    }
+
+    // --- Click-to-Copy Email Functionality ---
+    const emailLink = document.querySelector('.email-link');
+    if (emailLink) {
+      emailLink.addEventListener('click', (e) => {
+        // If user wants normal mailto behavior, we don't preventDefault
+        // But we always copy the text
+        const emailToCopy = emailLink.getAttribute('data-copy');
+        if (emailToCopy) {
+          navigator.clipboard.writeText(emailToCopy).then(() => {
+            const feedback = emailLink.querySelector('.copy-feedback');
+            if (feedback) {
+              feedback.classList.add('show');
+              setTimeout(() => {
+                feedback.classList.remove('show');
+              }, 2000);
+            }
+          });
         }
       });
     }
-  }
-
-  // --- Generic Intersection Observer for Section Reveals ---
-  const revealSections = document.querySelectorAll('.contact-cta, .footer-premium');
-  if (revealSections.length > 0) {
-    const sectionObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('active');
-          sectionObserver.unobserve(entry.target);
-        }
-      });
-    }, {
-      threshold: 0.1,
-      rootMargin: '0px 0px -50px 0px'
-    });
-
-    revealSections.forEach(section => sectionObserver.observe(section));
-  }
-
-  // --- Click-to-Copy Email Functionality ---
-  const emailLink = document.querySelector('.email-link');
-  if (emailLink) {
-    emailLink.addEventListener('click', (e) => {
-      // If user wants normal mailto behavior, we don't preventDefault
-      // But we always copy the text
-      const emailToCopy = emailLink.getAttribute('data-copy');
-      if (emailToCopy) {
-        navigator.clipboard.writeText(emailToCopy).then(() => {
-          const feedback = emailLink.querySelector('.copy-feedback');
-          if (feedback) {
-            feedback.classList.add('show');
-            setTimeout(() => {
-              feedback.classList.remove('show');
-            }, 2000);
-          }
-        });
-      }
-    });
-  }
+  });
 });

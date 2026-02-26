@@ -7,20 +7,21 @@
   <title>Rishabh Saxena — Portfolio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <!-- Non-render-blocking Google Fonts -->
-  <link rel="preload" as="style"
-    href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=Outfit:wght@100..900&display=swap">
-  <link
-    href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=Outfit:wght@100..900&display=swap"
-    rel="stylesheet" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="styles.css">
+  <!-- Non-render-blocking Google Fonts: loaded via JS after first paint -->
+  <script>
+    (function () {
+      var l = document.createElement('link');
+      l.rel = 'stylesheet';
+      l.href = 'https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=Outfit:wght@100..900&display=swap';
+      document.head.appendChild(l);
+    })();
+  </script>
   <noscript>
     <link
       href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=Outfit:wght@100..900&display=swap"
       rel="stylesheet">
   </noscript>
-  <!-- Preload main stylesheet for faster LCP -->
-  <link rel="preload" href="styles.css" as="style">
-  <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
