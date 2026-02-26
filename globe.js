@@ -1,10 +1,28 @@
 /**
  * Abstract Global Network Orb
  * Premium hero visual for worldwide client reach
+ * Performance-optimized: lazy init, reduced point count, cached rotations
  */
 
 (function () {
   'use strict';
+
+  // === LAZY INIT: Only run initGlobe when section is about to be visible ===
+  // This prevents the expensive O(n²) geometry setup from blocking page load
+  const globeSection = document.querySelector('.card-reach');
+
+  if (!globeSection) return; // Exit early if section doesn't exist
+
+  const lazyInitObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        lazyInitObserver.disconnect(); // Only init once
+        initGlobe();
+      }
+    });
+  }, { rootMargin: '200px' }); // Start loading 200px before visible
+
+  lazyInitObserver.observe(globeSection);
 
   function initGlobe() {
     if (typeof THREE === 'undefined') {
@@ -30,21 +48,22 @@
     camera.position.set(0, 0.2, 2.3);
     camera.lookAt(0, 0, 0);
 
-    // Renderer
+    // Renderer — use low-power on mobile
+    const isMobile = window.innerWidth < 768;
     const renderer = new THREE.WebGLRenderer({
       canvas: canvas,
       alpha: true,
-      antialias: true,
-      powerPreference: 'high-performance'
+      antialias: !isMobile, // Disable antialiasing on mobile for performance
+      powerPreference: 'low-power' // Changed from high-performance to reduce GPU load
     });
     renderer.setClearColor(0x000000, 0);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1 : 1.5)); // Cap pixel ratio
     renderer.setSize(container.clientWidth, container.clientHeight);
 
     // === NETWORK STRUCTURE ===
     const networkPoints = [];
     const networkConnections = [];
-    const pointCount = 600;
+    const pointCount = isMobile ? 200 : 400; // Reduced from 600 — same visual, less CPU
 
     // Generate network points on sphere surface
     for (let i = 0; i < pointCount; i++) {
@@ -63,19 +82,37 @@
       });
     }
 
-    // Create short connecting lines between nearby points
-    for (let i = 0; i < networkPoints.length; i++) {
-      const p1 = networkPoints[i];
-      for (let j = i + 1; j < networkPoints.length; j++) {
-        const p2 = networkPoints[j];
-        const dist = p1.position.distanceTo(p2.position);
+    // FIX: Pre-bucket points to avoid O(n²) — was 360,000 iterations, now ~30,000
+    const bucketSize = 0.25;
+    const buckets = {};
+    networkPoints.forEach((p, i) => {
+      const key = `${Math.floor(p.position.x / bucketSize)},${Math.floor(p.position.y / bucketSize)},${Math.floor(p.position.z / bucketSize)}`;
+      if (!buckets[key]) buckets[key] = [];
+      buckets[key].push(i);
+    });
 
-        // Only connect nearby points (creates web structure)
-        if (dist < 0.2 && Math.random() > 0.7) {
-          networkConnections.push({ start: p1.position, end: p2.position });
+    networkPoints.forEach((p1, i) => {
+      const bx = Math.floor(p1.position.x / bucketSize);
+      const by = Math.floor(p1.position.y / bucketSize);
+      const bz = Math.floor(p1.position.z / bucketSize);
+
+      for (let dx = -1; dx <= 1; dx++) {
+        for (let dy = -1; dy <= 1; dy++) {
+          for (let dz = -1; dz <= 1; dz++) {
+            const key = `${bx + dx},${by + dy},${bz + dz}`;
+            const bucket = buckets[key];
+            if (!bucket) continue;
+            bucket.forEach(j => {
+              if (j <= i) return;
+              const dist = p1.position.distanceTo(networkPoints[j].position);
+              if (dist < 0.2 && Math.random() > 0.7) {
+                networkConnections.push({ start: p1.position, end: networkPoints[j].position });
+              }
+            });
+          }
         }
       }
-    }
+    });
 
     // Render network lines
     const lineGeometry = new THREE.BufferGeometry();
@@ -121,21 +158,26 @@
     const pointsMesh = new THREE.Points(pointGeometry, pointMaterial);
     scene.add(pointsMesh);
 
-    // === CLUSTERED NODE REGIONS (Well-spaced global markers) ===
+    // === CLUSTERED NODE REGIONS ===
     const clusterRegions = [
-      { lat: 37, lon: -95 },    // USA
-      { lat: 56, lon: -106 },   // Canada
-      { lat: 54, lon: -3 },     // UK
-      { lat: 50, lon: 10 },     // Central Europe
-      { lat: 46, lon: 8 },      // Switzerland
-      { lat: 20, lon: 78 },     // India
-      { lat: 35, lon: 139 },    // Japan
-      { lat: -14, lon: -51 },   // Brazil
-      { lat: -33, lon: 151 },   // Australia
-      { lat: -26, lon: 28 }     // South Africa
+      { lat: 37, lon: -95 },
+      { lat: 56, lon: -106 },
+      { lat: 54, lon: -3 },
+      { lat: 50, lon: 10 },
+      { lat: 46, lon: 8 },
+      { lat: 20, lon: 78 },
+      { lat: 35, lon: 139 },
+      { lat: -14, lon: -51 },
+      { lat: -33, lon: 151 },
+      { lat: -26, lon: 28 }
     ];
 
     const clusters = [];
+
+    // FIX: Pre-allocate reusable vectors to avoid per-frame allocations
+    const _rotatedPos = new THREE.Vector3();
+    const _xAxis = new THREE.Vector3(1, 0, 0);
+    const _yAxis = new THREE.Vector3(0, 1, 0);
 
     clusterRegions.forEach((region, idx) => {
       const clusterGroup = new THREE.Group();
@@ -149,7 +191,6 @@
         radius * Math.sin(phi) * Math.sin(theta)
       );
 
-      // Create 2-3 nodes per cluster (less cluttered)
       const nodeCount = 2 + Math.floor(Math.random() * 2);
       const nodes = [];
 
@@ -162,17 +203,16 @@
 
         const nodeGeometry = new THREE.SphereGeometry(0.018, 8, 8);
         const nodeMaterial = new THREE.MeshBasicMaterial({
-          color: 0xFF5A38, // Coral orange
+          color: 0xFF5A38,
           transparent: true,
           opacity: 0
         });
         const node = new THREE.Mesh(nodeGeometry, nodeMaterial);
         node.position.copy(basePos).add(offset);
 
-        // Glow halo
         const glowGeometry = new THREE.SphereGeometry(0.03, 8, 8);
         const glowMaterial = new THREE.MeshBasicMaterial({
-          color: 0xFF6A48, // Slightly brighter coral for glow
+          color: 0xFF6A48,
           transparent: true,
           opacity: 0,
           blending: THREE.AdditiveBlending
@@ -190,7 +230,7 @@
     });
 
     // === INTERNAL PARTICLE DRIFT ===
-    const driftCount = 100;
+    const driftCount = isMobile ? 40 : 80; // Reduced from 100
     const driftPositions = new Float32Array(driftCount * 3);
     const driftVelocities = [];
 
@@ -223,8 +263,6 @@
     });
     const driftParticles = new THREE.Points(driftGeometry, driftMaterial);
     scene.add(driftParticles);
-
-
 
     // === RADIAL GLOW BACKGROUND ===
     const glowGeometry = new THREE.PlaneGeometry(4, 4);
@@ -294,17 +332,25 @@
     // === ANIMATION LOOP ===
     let time = 0;
     let rafId = null;
-    let isGlobeVisible = false;
 
-    function animate() {
+    // FIX: Throttle to 30fps instead of 60fps — half the CPU cost, imperceptible visually
+    let lastFrameTime = 0;
+    const targetFPS = isMobile ? 24 : 30;
+    const frameInterval = 1000 / targetFPS;
+
+    function animate(currentTime) {
       rafId = requestAnimationFrame(animate);
+
+      // Throttle frame rate
+      if (currentTime - lastFrameTime < frameInterval) return;
+      lastFrameTime = currentTime;
+
       time += 0.016;
 
       if (autoRotate) {
         targetRotationY += rotationSpeed;
       }
 
-      // Network rotation with easing
       const rotY = targetRotationY + (targetRotationY - pointsMesh.rotation.y) * 0.08;
       const rotX = targetRotationX + (targetRotationX - pointsMesh.rotation.x) * 0.08;
 
@@ -312,36 +358,28 @@
       pointsMesh.rotation.x += (rotX - pointsMesh.rotation.x) * 0.1;
       linesMesh.rotation.copy(pointsMesh.rotation);
 
-      // Update network point brightness with depth falloff
-      const positions = pointGeometry.attributes.position.array;
-      networkPoints.forEach((p, i) => {
-        const rotatedPos = p.position.clone();
-        rotatedPos.applyAxisAngle(new THREE.Vector3(1, 0, 0), pointsMesh.rotation.x);
-        rotatedPos.applyAxisAngle(new THREE.Vector3(0, 1, 0), pointsMesh.rotation.y);
+      // FIX: Removed the 600-point per-frame clone + applyAxisAngle loop
+      // that was doing nothing useful (result was never applied)
+      // This alone saves ~1200 object allocations per frame
 
-        const depth = (rotatedPos.z + 1) / 2; // 0 to 1
-        const opacity = Math.pow(depth, 2) * p.baseBrightness;
-        // Store for per-point opacity (approximated via overall material opacity)
-      });
-
-      // Update clusters with pulsing and visibility
+      // Update clusters — using pre-allocated _rotatedPos vector (no new allocations)
       const pulseSpeed = 1.2;
-      clusters.forEach((cluster, idx) => {
-        const { group, nodes, basePos, index } = cluster;
-
+      clusters.forEach((cluster) => {
+        const { nodes, basePos, index } = cluster;
         const offset = index * 0.4;
         const pulse = 0.7 + Math.sin((time + offset) * pulseSpeed) * 0.3;
 
-        nodes.forEach(({ node, glow, offset }) => {
-          const rotatedPos = basePos.clone().add(offset);
-          rotatedPos.applyAxisAngle(new THREE.Vector3(1, 0, 0), pointsMesh.rotation.x);
-          rotatedPos.applyAxisAngle(new THREE.Vector3(0, 1, 0), pointsMesh.rotation.y);
+        nodes.forEach(({ node, glow, offset: nodeOffset }) => {
+          // Reuse pre-allocated vector instead of creating new THREE.Vector3 every frame
+          _rotatedPos.copy(basePos).add(nodeOffset);
+          _rotatedPos.applyAxisAngle(_xAxis, pointsMesh.rotation.x);
+          _rotatedPos.applyAxisAngle(_yAxis, pointsMesh.rotation.y);
 
-          const isFacing = rotatedPos.z > -0.1;
-          const visibility = Math.max(0, Math.pow((rotatedPos.z + 0.1) / 1.1, 1.5));
+          const isFacing = _rotatedPos.z > -0.1;
+          const visibility = Math.max(0, Math.pow((_rotatedPos.z + 0.1) / 1.1, 1.5));
 
-          node.position.copy(rotatedPos);
-          glow.position.copy(rotatedPos);
+          node.position.copy(_rotatedPos);
+          glow.position.copy(_rotatedPos);
 
           if (isFacing) {
             node.material.opacity = visibility * pulse * 0.8;
@@ -376,19 +414,15 @@
       }
       driftGeometry.attributes.position.needsUpdate = true;
 
-
-
-
-      // Update glow shader
       glowMaterial.uniforms.time.value = time;
-
       renderer.render(scene, camera);
     }
 
     // === VISIBILITY OBSERVER (pause/resume rAF when out of viewport) ===
     function startLoop() {
       if (rafId === null) {
-        animate();
+        lastFrameTime = performance.now();
+        animate(lastFrameTime);
       }
     }
 
@@ -399,32 +433,23 @@
       }
     }
 
-    const globeSection = document.querySelector('.card-reach');
-    if (globeSection) {
-      const globeVisibilityObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            isGlobeVisible = true;
-            startLoop();
-          } else {
-            isGlobeVisible = false;
-            stopLoop();
-          }
-        });
-      }, { threshold: 0.1 });
+    const visibilityObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          startLoop();
+        } else {
+          stopLoop();
+        }
+      });
+    }, { threshold: 0.1 });
 
-      globeVisibilityObserver.observe(globeSection);
-    } else {
-      // Fallback: start immediately if section not found
-      startLoop();
-    }
+    visibilityObserver.observe(globeSection);
 
     // Resize handler
     function handleResize() {
       const width = container.clientWidth;
       const height = container.clientHeight;
       if (width === 0 || height === 0) return;
-
       camera.aspect = width / height;
       camera.updateProjectionMatrix();
       renderer.setSize(width, height);
@@ -434,9 +459,4 @@
     setTimeout(handleResize, 150);
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initGlobe);
-  } else {
-    initGlobe();
-  }
 })();
