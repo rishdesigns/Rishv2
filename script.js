@@ -225,7 +225,7 @@ document.addEventListener('DOMContentLoaded', () => {
     card.style.setProperty('--mouse-x', `${percentX}%`);
     card.style.setProperty('--mouse-y', `${percentY}%`);
     card.style.transform = `translateY(-20px) translateZ(50px) rotateX(${tiltX}deg) rotateY(${tiltY}deg)`;
-  });
+  }, { passive: true });
 
   track.addEventListener('mouseout', (e) => {
     const card = e.target.closest('.card');
@@ -235,10 +235,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ensure we have enough items for seamless scroll by cloning until width > 2x container
   const ensureLoop = () => {
-    // 1. Calculate original width precisely
+    // 1. Pre-measure all card widths ONCE to avoid layout thrashing
     const gap = parseFloat(getComputedStyle(track).gap || 16);
+    const cardWidths = cards.map(c => c.getBoundingClientRect().width);
     let originalW = 0;
-    cards.forEach(c => originalW += c.getBoundingClientRect().width + gap);
+    cardWidths.forEach(w => originalW += w + gap);
 
     // 2. Clone until total length covers at least (original width + viewport width)
     const containerWidth = window.innerWidth;
@@ -248,7 +249,8 @@ document.addEventListener('DOMContentLoaded', () => {
     while (totalW < originalW + containerWidth) {
       const clone = cards[idx % cards.length].cloneNode(true);
       track.appendChild(clone);
-      totalW += clone.getBoundingClientRect().width + gap;
+      // Use pre-measured width instead of forcing layout recalc
+      totalW += cardWidths[idx % cards.length] + gap;
       idx++;
       if (idx > 50) break; // safety
     }
@@ -291,7 +293,12 @@ document.addEventListener('DOMContentLoaded', () => {
     raf = requestAnimationFrame(step);
   }
 
-  let raf = requestAnimationFrame(step);
+  // Defer strip animation to after full page load to reduce TBT
+  let raf;
+  window.addEventListener('load', () => {
+    lastTime = performance.now();
+    raf = requestAnimationFrame(step);
+  });
 
   // Pause on hover/focus
   track.addEventListener('mouseenter', () => paused = true);
@@ -384,7 +391,7 @@ document.addEventListener('DOMContentLoaded', () => {
       dragStartX += loopWidth;
     }
     track.style.transform = `translate3d(${-px}px, 0, 0)`;
-  });
+  }, { passive: true });
 
   window.addEventListener('mouseup', () => {
     if (!isDragging) return;
@@ -533,7 +540,7 @@ document.addEventListener('DOMContentLoaded', () => {
         lbPrev.style.opacity = '0.3';
       }
     }, 2000);
-  });
+  }, { passive: true });
 
   // Cleanup when unloading
   window.addEventListener('beforeunload', () => cancelAnimationFrame(raf));
@@ -834,20 +841,34 @@ document.addEventListener('DOMContentLoaded', () => {
     let imageIdx = 0;
     let imageInterval;
 
-    // Follow mouse with delay (lerp)
+    // Follow mouse with delay (lerp) — only runs while a panel is hovered
+    let previewRaf = null;
     const animatePreview = () => {
-      if (window.innerWidth > 768) {
-        const ease = 0.12; // 120ms-ish delay feel
-        previewX += (mouseX - previewX) * ease;
-        previewY += (mouseY - previewY) * ease;
-
-        // Offset preview from cursor
-        hoverPreview.style.left = `${previewX + 24}px`;
-        hoverPreview.style.top = `${previewY - 120}px`;
+      if (window.innerWidth <= 768) {
+        previewRaf = null;
+        return; // Never run on mobile
       }
-      requestAnimationFrame(animatePreview);
+      const ease = 0.12; // 120ms-ish delay feel
+      previewX += (mouseX - previewX) * ease;
+      previewY += (mouseY - previewY) * ease;
+
+      // Offset preview from cursor
+      hoverPreview.style.left = `${previewX + 24}px`;
+      hoverPreview.style.top = `${previewY - 120}px`;
+      previewRaf = requestAnimationFrame(animatePreview);
     };
-    animatePreview();
+
+    const startPreviewLoop = () => {
+      if (!previewRaf && window.innerWidth > 768) {
+        previewRaf = requestAnimationFrame(animatePreview);
+      }
+    };
+    const stopPreviewLoop = () => {
+      if (previewRaf) {
+        cancelAnimationFrame(previewRaf);
+        previewRaf = null;
+      }
+    };
 
     const switchPreviewImage = () => {
       if (currentImages.length <= 1) return;
@@ -873,6 +894,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         hoverPreview.classList.add('active');
+        startPreviewLoop(); // Start RAF loop on hover
 
         const imagesStr = panel.getAttribute('data-images');
         currentImages = imagesStr ? imagesStr.split(',') : [];
@@ -894,13 +916,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         hoverPreview.classList.remove('active');
         clearInterval(imageInterval);
+        stopPreviewLoop(); // Stop RAF loop when not hovering
       });
     });
 
     window.addEventListener('mousemove', (e) => {
       mouseX = e.clientX;
       mouseY = e.clientY;
-    });
+    }, { passive: true });
 
     // Mobile: Toggle panel on tap
     if (window.innerWidth <= 768) {
