@@ -293,9 +293,11 @@
 
     // === ANIMATION LOOP ===
     let time = 0;
+    let rafId = null;
+    let isGlobeVisible = false;
 
     function animate() {
-      requestAnimationFrame(animate);
+      rafId = requestAnimationFrame(animate);
       time += 0.016;
 
       if (autoRotate) {
@@ -377,14 +379,45 @@
 
 
 
-
       // Update glow shader
       glowMaterial.uniforms.time.value = time;
 
       renderer.render(scene, camera);
     }
 
-    animate();
+    // === VISIBILITY OBSERVER (pause/resume rAF when out of viewport) ===
+    function startLoop() {
+      if (rafId === null) {
+        animate();
+      }
+    }
+
+    function stopLoop() {
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId);
+        rafId = null;
+      }
+    }
+
+    const globeSection = document.querySelector('.card-reach');
+    if (globeSection) {
+      const globeVisibilityObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            isGlobeVisible = true;
+            startLoop();
+          } else {
+            isGlobeVisible = false;
+            stopLoop();
+          }
+        });
+      }, { threshold: 0.1 });
+
+      globeVisibilityObserver.observe(globeSection);
+    } else {
+      // Fallback: start immediately if section not found
+      startLoop();
+    }
 
     // Resize handler
     function handleResize() {
