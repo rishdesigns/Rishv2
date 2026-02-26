@@ -805,9 +805,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
       calculateSpacerHeight();
 
+      // Cache layout values to avoid forced reflows on every scroll frame
+      let cachedViewportWidth = window.innerWidth;
+      let cachedRailWidth = capRail.scrollWidth;
+      let isDesktop = cachedViewportWidth > 768;
+
       // Handle scroll transitions
       const handleScroll = () => {
-        if (window.innerWidth > 768) {
+        if (isDesktop) {
           const spacerRect = capSpacer.getBoundingClientRect();
           const spacerTop = spacerRect.top;
           const spacerHeight = spacerRect.height;
@@ -836,10 +841,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const panelsProgress = (overallProgress - panelsStartProgress) / (1 - panelsStartProgress);
             const clampedPanelsProgress = Math.max(0, Math.min(1, panelsProgress));
 
-            // Horizontal translation
-            const railWidth = capRail.scrollWidth;
-            const viewportWidth = window.innerWidth;
-            const maxScroll = railWidth - viewportWidth;
+            // Use cached values instead of reading layout on every frame
+            const maxScroll = cachedRailWidth - cachedViewportWidth;
 
             const translateX = clampedPanelsProgress * maxScroll;
 
@@ -871,6 +874,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
       window.addEventListener('scroll', onScroll, { passive: true });
       window.addEventListener('resize', () => {
+        // Refresh cached layout values
+        cachedViewportWidth = window.innerWidth;
+        cachedRailWidth = capRail.scrollWidth;
+        isDesktop = cachedViewportWidth > 768;
         calculateSpacerHeight();
         handleScroll();
       });
