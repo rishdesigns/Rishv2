@@ -685,6 +685,35 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Lazy-load Three.js + Globe when the globe section is about to enter viewport
+  const globeSection = document.querySelector('.card-reach');
+  if (globeSection) {
+    let globeLoaded = false;
+
+    function loadGlobe() {
+      if (globeLoaded) return;
+      globeLoaded = true;
+      const s1 = document.createElement('script');
+      s1.src = 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js';
+      s1.onload = () => {
+        const s2 = document.createElement('script');
+        s2.src = 'globe.js';
+        document.body.appendChild(s2);
+      };
+      document.body.appendChild(s1);
+    }
+
+    const globeObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          loadGlobe();
+          globeObserver.unobserve(entry.target);
+        }
+      });
+    }, { rootMargin: '200px' });
+    globeObserver.observe(globeSection);
+  }
+
   // 2. Intersection Observer for About Cards
   const aboutCards = document.querySelectorAll('.about-card');
   if (aboutCards.length > 0) {
