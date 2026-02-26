@@ -18,11 +18,11 @@ export const selectedWorkProjects = [
         type: 'case-study', // 'case-study' or 'project'
         template: 'case-study-default', // Template HTML file to use
         shortDescription: 'Intelligent call recording and transcription app with AI-powered insights.',
-        heroPlaceholderImage: 'Assets/Call%20recording%20app%20Rish%20Designs.png',
+        heroPlaceholderImage: 'Assets/Streaming App.webp',
         galleryPlaceholderImages: [
-            'Assets/Call%20recording%20app%20Rish%20Designs.png',
-            'Assets/Call%20recording%20app%20Rish%20Designs.png',
-            'Assets/Call%20recording%20app%20Rish%20Designs.png'
+            'Assets/Streaming App.webp',
+            'Assets/Streaming App.webp',
+            'Assets/Streaming App.webp'
         ],
         role: 'Lead UX/UI Designer',
         platform: 'iOS, Android',
@@ -127,8 +127,8 @@ export const selectedWorkProjects = [
                 title: 'Wireframes & Iterations',
                 description: 'Iterated through 3 major layout directions for the recording interface and playback experience, testing each with 5 users.',
                 images: [
-                    'Assets/Call%20recording%20app%20Rish%20Designs.png',
-                    'Assets/Call%20recording%20app%20Rish%20Designs.png'
+                    'Assets/Streaming App.webp',
+                    'Assets/Streaming App.webp'
                 ],
                 layout: 'grid-2'
             },
@@ -136,9 +136,9 @@ export const selectedWorkProjects = [
                 title: 'Final Design',
                 description: 'The polished high-fidelity interface with dark mode, clear hierarchy, and immersive audio waveform visualizations.',
                 images: [
-                    'Assets/Call%20recording%20app%20Rish%20Designs.png',
-                    'Assets/Call%20recording%20app%20Rish%20Designs.png',
-                    'Assets/Call%20recording%20app%20Rish%20Designs.png'
+                    'Assets/Streaming App.webp',
+                    'Assets/Streaming App.webp',
+                    'Assets/Streaming App.webp'
                 ],
                 layout: 'stacked'
             },
@@ -221,12 +221,12 @@ export const selectedWorkProjects = [
         type: 'project',
         template: 'project-showcase',
         shortDescription: 'Financial analytics platform for tracking multi-chain crypto assets.',
-        heroPlaceholderImage: 'Assets/Crypto%20UI%20Rish%20Designs.png',
+        heroPlaceholderImage: 'Assets/Creative Studio.webp',
         galleryPlaceholderImages: [
-            'Assets/Crypto%20UI%20Rish%20Designs.png',
-            'Assets/Crypto%20UI%20Rish%20Designs.png',
-            'Assets/Crypto%20UI%20Rish%20Designs.png',
-            'Assets/Crypto%20UI%20Rish%20Designs.png',
+            'Assets/Creative Studio.webp',
+            'Assets/Creative Studio.webp',
+            'Assets/Creative Studio.webp',
+            'Assets/Creative Studio.webp',
             'Assets/Crypto%20UI%20Rish%20Designs.png'
         ],
         role: 'Product Designer',
@@ -250,11 +250,11 @@ export const selectedWorkProjects = [
         type: 'case-study',
         template: 'case-study-default',
         shortDescription: 'Personal carbon footprint tracker with gamified wellness features.',
-        heroPlaceholderImage: 'Assets/Fitness%20app%20UI.png',
+        heroPlaceholderImage: 'Assets/Porsche.webp',
         galleryPlaceholderImages: [
-            'Assets/Fitness%20app%20UI.png',
-            'Assets/Fitness%20app%20UI.png',
-            'Assets/Fitness%20app%20UI.png'
+            'Assets/Porsche.webp',
+            'Assets/Porsche.webp',
+            'Assets/Porsche.webp'
         ],
         role: 'UX/UI Designer',
         platform: 'iOS, Android',
@@ -361,11 +361,11 @@ export const selectedWorkProjects = [
         type: 'project',
         template: 'project-showcase',
         shortDescription: 'Modern food delivery platform with real-time tracking and ordering.',
-        heroPlaceholderImage: 'Assets/Food%20app%20ui%20Rish%20Designs.png',
+        heroPlaceholderImage: 'Assets/Porsche.webp',
         galleryPlaceholderImages: [
-            'Assets/Food%20app%20ui%20Rish%20Designs.png',
-            'Assets/Food%20app%20ui%20Rish%20Designs.png',
-            'Assets/Food%20app%20ui%20Rish%20Designs.png'
+            'Assets/Porsche.webp',
+            'Assets/Porsche.webp',
+            'Assets/Porsche.webp'
         ],
         role: 'UI/UX Designer',
         platform: 'iOS, Android',
@@ -388,11 +388,11 @@ export const selectedWorkProjects = [
         type: 'project',
         template: 'project-showcase',
         shortDescription: 'Premium landing page showcasing modern glassmorphic design trends.',
-        heroPlaceholderImage: 'Assets/Glassmorphism%20Landing%20Page%20Rish%20Designs.png',
+        heroPlaceholderImage: 'Assets/Porsche.webp',
         galleryPlaceholderImages: [
-            'Assets/Glassmorphism%20Landing%20Page%20Rish%20Designs.png',
-            'Assets/Glassmorphism%20Landing%20Page%20Rish%20Designs.png',
-            'Assets/Glassmorphism%20Landing%20Page%20Rish%20Designs.png'
+            'Assets/Porsche.webp',
+            'Assets/Porsche.webp',
+            'Assets/Porsche.webp'
         ],
         role: 'UI Designer & Frontend Developer',
         platform: 'Web',
@@ -415,11 +415,11 @@ export const selectedWorkProjects = [
         type: 'project',
         template: 'project-showcase',
         shortDescription: 'Enterprise SaaS platform with advanced workflow automation features.',
-        heroPlaceholderImage: 'Assets/Liquid%20Glass%20UI%20Rish%20Designs.png',
+        heroPlaceholderImage: 'Assets/Fitness App.webp',
         galleryPlaceholderImages: [
-            'Assets/Liquid%20Glass%20UI%20Rish%20Designs.png',
-            'Assets/Liquid%20Glass%20UI%20Rish%20Designs.png',
-            'Assets/Liquid%20Glass%20UI%20Rish%20Designs.png'
+            'Assets/Fitness App.webp',
+            'Assets/Fitness App.webp',
+            'Assets/Fitness App.webp'
         ],
         role: 'Lead Product Designer',
         platform: 'Web App',
@@ -442,11 +442,11 @@ export const selectedWorkProjects = [
         type: 'project',
         template: 'project-showcase',
         shortDescription: 'Minimalist podcast player with smart playlists and offline downloads.',
-        heroPlaceholderImage: 'Assets/Podcast%20app.png',
+        heroPlaceholderImage: 'Assets/Fitness App.webp',
         galleryPlaceholderImages: [
-            'Assets/Podcast%20app.png',
-            'Assets/Podcast%20app.png',
-            'Assets/Podcast%20app.png'
+            'Assets/Fitness App.webp',
+            'Assets/Fitness App.webp',
+            'Assets/Fitness App.webp'
         ],
         role: 'UI/UX Designer',
         platform: 'iOS',
