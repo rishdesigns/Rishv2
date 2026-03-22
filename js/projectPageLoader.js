@@ -394,29 +394,23 @@ class ProjectPageLoader {
   }
 
   buildImpact(data) {
-    const metricsHtml = data.metrics
-      ? `<div class="outcomes-grid">
-           ${data.metrics.map(m => `
-             <div class="outcome-card">
-               <div class="outcome-metric">${m.value}</div>
-               <div class="outcome-label">${m.label}</div>
+    const highlightsHtml = data.highlights
+      ? `<div class="impact-highlights-grid">
+           ${data.highlights.map(h => `
+             <div class="impact-highlight-card">
+               <div class="impact-highlight-icon">${h.icon}</div>
+               <h4 class="impact-highlight-title">${h.title}</h4>
+               <p class="impact-highlight-text">${h.text}</p>
              </div>`).join('')}
-         </div>`
-      : '';
-
-    const testimonialHtml = data.testimonial
-      ? `<div class="testimonial">
-           <blockquote class="testimonial-quote">"${data.testimonial.quote}"</blockquote>
-           <cite class="testimonial-author">— ${data.testimonial.author}</cite>
          </div>`
       : '';
 
     return `
       <div class="section-container">
-        <h2 class="section-title">${data.title || 'Impact & Results'}</h2>
-        ${data.text ? `<div class="section-text-block"><p>${data.text}</p></div>` : ''}
-        ${metricsHtml}
-        ${testimonialHtml}
+        <p class="impact-label">${data.title || 'Impact & Results'}</p>
+        ${data.headline ? `<h2 class="impact-headline">${data.headline}</h2>` : ''}
+        ${data.text ? `<div class="impact-description"><p>${data.text}</p></div>` : ''}
+        ${highlightsHtml}
       </div>`;
   }
 

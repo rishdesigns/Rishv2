@@ -12,17 +12,17 @@
 export const selectedWorkProjects = [
     {
         id: 1,
-        title: 'Call Recording App',
-        slug: 'call-recording-app',
+        title: 'Stream X: Social Live Streaming Platform',
+        slug: 'stream-x',
         category: 'Mobile',
         type: 'case-study', // 'case-study' or 'project'
         template: 'case-study-default', // Template HTML file to use
-        shortDescription: 'Intelligent call recording and transcription app with AI-powered insights.',
-        heroPlaceholderImage: 'Assets/Streaming App.webp',
+        shortDescription: 'A mobile-first UX strategy study in content discovery, live engagement, and creator trust.',
+        heroPlaceholderImage: 'Assets/selectedwork/Streaming-App.webp',
         galleryPlaceholderImages: [
-            'Assets/Streaming App.webp',
-            'Assets/Streaming App.webp',
-            'Assets/Streaming App.webp'
+            'Assets/selectedwork/Streaming-App.webp',
+            'Assets/selectedwork/Streaming-App.webp',
+            'Assets/selectedwork/Streaming-App.webp'
         ],
         role: 'Lead UX/UI Designer',
         platform: 'iOS, Android',
@@ -53,7 +53,7 @@ export const selectedWorkProjects = [
         sectionContent: {
             overview: {
                 title: 'Project Overview',
-                text: 'Designed a seamless mobile experience for professionals to record, transcribe, and extract insights from their phone conversations.',
+                text: 'A mobile-native streaming platform built to solve the one problem Twitch, YouTube Live and TikTok never solved on mobile: getting the right user to the right stream in seconds.',
                 role: 'Lead UX/UI Designer',
                 tools: ['Figma', 'FigJam', 'Maze', 'Notion', 'Lottie'],
                 responsibilities: [
@@ -69,8 +69,8 @@ export const selectedWorkProjects = [
             },
             problem: {
                 label: 'The Challenge',
-                headline: 'Professionals were spending <span class="highlight">3+ hours per week</span> manually reviewing call recordings across fragmented tools.',
-                text: 'Existing solutions were clunky and unreliable \u2014 complicated onboarding, poor transcription quality, and zero intelligent organization. <strong>78% of users</strong> abandoned recording apps within the first week due to friction. Our challenge was to build an always-ready, intelligent recording tool that could transcribe and surface key moments automatically.'
+                headline: '<span class="highlight">19% of users</span> abandon a streaming session entirely when they can\'t find something to watch.For users aged 18–24, that number jumps to 29% (Source: Nielsen Gracenote, 2025)',
+                text: 'Existing platforms were built for desktop and ported to mobile. Not designed for it. Cluttered navigation, no content hierarchy, and zero trust signals meant users left before they ever found a reason to stay. The challenge was to <Strong>design a mobile-native streaming platform</strong> that could take a first-time visitor from zero context to an active live session in under 15 seconds.'
             },
             goals: {
                 title: 'Goals',
@@ -79,30 +79,31 @@ export const selectedWorkProjects = [
                         icon: '\uD83D\uDCCB',
                         title: 'Business Goals',
                         items: [
-                            'Achieve 90%+ transcription accuracy',
-                            'Reduce time-to-insight by 60%',
-                            'Increase user retention past first week',
-                            'Build a searchable archive as accessible as email'
+                            'Increase session depth through layered content discovery',
+                            'Create a monetisation surface through native live gifting',
+                            'Expand content categories beyond gaming through the IRL, Battles, Science and Radio category architecture on Home',
+                            'Maximise content consumption time by keeping users in the app through Recommended streams after their primary session ends'
                         ]
                     },
                     {
                         icon: '\u2764\uFE0F',
                         title: 'User Goals',
                         items: [
-                            'One-tap recording from any screen',
-                            'Instant searchable transcripts',
-                            'Smart tagging of action items',
-                            'Effortless sharing of key moments'
+                            'Find something worth watching without knowing what that is',
+                            'Feel present and social during a live stream, not just a spectator',
+                            'Follow creators whose identity is clear from a single profile visit',
+                            'Get notified only when something relevant actually happens'
                         ]
                     }
                 ]
             },
             research: {
                 title: 'Research & Discovery',
-                text: 'Conducted 15 in-depth user interviews with sales professionals, consultants, and journalists to understand their call workflows. Ran a competitive analysis of 8 existing recording apps, identifying common UX pitfalls: complicated onboarding, poor transcription quality, and lack of intelligent organization. Survey data from 200+ respondents confirmed that 78% of users abandon recording apps within the first week due to friction.',
+                text: 'Analysed 5 competing streaming platforms across three specific dimensions: how quickly a new user reaches a live stream, how creator credibility is established on a zero-reputation platform, and how notification systems drive re-engagement without fatigue. Nielsen Gracenote\'s 2025 State of Play report provided the quantitative anchor, confirming that discovery friction drives the highest abandonment among 18 to 24 year olds. Community research across streaming forums on Reddit and Discord surfaced the qualitative layer: mobile users do not fail because the content is bad. They fail because the path to content is broken.',
                 images: [
-                    'Assets/Liquid%20Glass%20UI%20Rish%20Designs.png',
-                    'Assets/Call%20recording%20app%20Rish%20Designs.png'
+                    'Assets/CA-STREAMX.PNG',
+                    'Assets/Fitness App.webp',
+                    'Assets/Fitness App.webp'
                 ],
                 layout: 'grid-2'
             },
@@ -110,16 +111,16 @@ export const selectedWorkProjects = [
                 title: 'Strategy',
                 items: [
                     {
-                        title: 'Simplify Recording',
-                        text: 'Reduced the recording flow from 3 steps to a single tap. A persistent, minimal recording widget stays accessible across all screens without disrupting workflow.'
+                        title: 'Discovery Before Intent',
+                        text: 'Structured the home feed around categories, live previews and creator cards so users find something worth watching before they know what they are looking for. Every tap goes deeper, never sideways.'
                     },
                     {
-                        title: 'AI-First Transcription',
-                        text: 'Built the core experience around automatic transcription with smart tagging. Action items, decisions, and follow-ups are surfaced within seconds of a call ending.'
+                        title: 'Social Presence as a Core Feature',
+                        text: 'Built live chat, viewer counts and gifting directly into the stream view rather than treating them as secondary overlays. The social layer is the experience, not an addition to it.'
                     },
                     {
-                        title: 'Searchable Archive',
-                        text: 'Transformed static recordings into a searchable, taggable knowledge base. Users can find any conversation moment as easily as searching email.'
+                        title: 'Creator Identity at First Glance',
+                        text: 'Designed the profile to answer three questions in under five seconds: who is this person, are they worth following, and what do they make. Stats, verified badge and content tabs do that work instantly.'
                     }
                 ]
             },
@@ -146,34 +147,43 @@ export const selectedWorkProjects = [
                 title: 'Key UX Decisions',
                 items: [
                     {
-                        title: 'One-Tap Recording',
-                        text: 'Reduced recording initiation to a single tap from the home screen. Eliminated the 3-step flow from competitors that caused users to miss the start of conversations.',
+                        title: 'Segmented Notification Tabs',
+                        text: 'Splitting notifications into Unread, Following and All mirrors the mental model users already apply manually. Signal is separated from noise at a structural level so every notification feels relevant rather than something to ignore.',
                         image: 'Assets/Call%20recording%20app%20Rish%20Designs.png'
                     },
                     {
-                        title: 'AI-Powered Smart Tags',
-                        text: 'Implemented automatic tagging of action items, decisions, and follow-ups within transcripts. This reduced review time from 15 minutes to under 3 minutes per call.',
+                        title: 'Picture in Picture Host Avatar on Live Stream',
+                        text: 'The floating camera feed of the streamer in the bottom corner maintains the parasocial connection that makes live streaming worth watching. It also tells the user instantly that someone is live right now, not a recording.',
                         image: 'Assets/Call%20recording%20app%20Rish%20Designs.png'
                     },
                     {
                         title: 'Progressive Disclosure',
-                        text: 'The playback screen initially shows a clean waveform and transcript. Advanced features (export, share, edit tags) are revealed contextually to avoid overwhelming new users.',
+                        text: 'Stream X never shows everything at once. Information is revealed in layers, matched exactly to how deep a user\'s intent has grown.\nOn the Home screen a user sees categories, two live previews and two creator cards. Enough to orient. Not enough to overwhelm. The moment they tap Games they enter the Sub-Category screen which reveals streamer circles, genre filter pills and an expanded live grid. More signal for a more committed browser. Tap a stream and the full Live view opens with chat, viewer count, gifting and the host avatar. Maximum context at maximum intent.\nThe same principle runs through the Notification screen. Unread sits first because that is the highest intent tab. Following comes next. All is there but never forced on you.\nThe Profile screen does it too. Bio and stats sit at the top for a first-time visitor making a follow decision. Content lives in tabs below so Videos, Audio, Schedule, Podcast and Chat are all accessible but none compete for attention at the same time.\nThe result is an app that feels simple to a first-time user and powerful to an advanced one. Not because there are two modes. Because the interface earns complexity only when the user signals they are ready for it.',
                         image: null
                     }
                 ]
             },
             impact: {
                 title: 'Impact & Results',
-                text: 'The redesigned app saw significant improvements across all key metrics within the first 3 months of launch, validating the research-driven design approach.',
-                metrics: [
-                    { value: '92%', label: 'Transcription Accuracy' },
-                    { value: '4.7', label: 'App Store Rating' },
-                    { value: '10K+', label: 'Monthly Active Users' }
-                ],
-                testimonial: {
-                    quote: 'This app has transformed how I handle client calls. The transcription is incredibly accurate and the smart tags save me hours every week.',
-                    author: 'Sarah M., Business Consultant'
-                }
+                headline: '',
+                text: 'Stream X was a self-initiated product design study treated with the same rigour as a live product. No brief, no team, no shortcuts. Every decision was researched, justified and documented from first principles.',
+                highlights: [
+                    {
+                        icon: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>',
+                        title: 'Complete User Journey',
+                        text: 'From first tap on Home to active Live Session covered across 5 screens with zero gaps in the flow.'
+                    },
+                    {
+                        icon: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>',
+                        title: 'Research Backed',
+                        text: 'Every core design decision validated against two published industry reports and a competitive teardown of 5 platforms.'
+                    },
+                    {
+                        icon: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>',
+                        title: 'Director-Level Process',
+                        text: 'Solo execution across research, competitive analysis, UX strategy, information architecture and high-fidelity design.'
+                    }
+                ]
             },
             learnings: {
                 title: 'Key Learnings',
@@ -187,47 +197,47 @@ export const selectedWorkProjects = [
     },
     {
         id: 2,
-        title: 'Christmas UI',
-        slug: 'christmas-ui',
-        category: 'Landing Pages',
+        title: 'Designing Mobile Experiences',
+        slug: 'Designing Mobile Experiences',
+        category: 'Mobile Apps',
         type: 'project',
         template: 'project-showcase',
-        shortDescription: 'Festive 3D interactive landing page with immersive holiday animations.',
-        heroPlaceholderImage: 'https://i.ibb.co/kVTJCCGC/Scene.gif',
+        shortDescription: 'A showcase of high-fidelity mobile interfaces designed with a focus on usability, scalability, and modern product thinking.',
+        heroPlaceholderImage: 'assets/selectedwork/app_thumbnail.webp',
         galleryPlaceholderImages: [
-            'https://i.ibb.co/kVTJCCGC/Scene.gif',
-            'https://i.ibb.co/kVTJCCGC/Scene.gif',
-            'https://i.ibb.co/kVTJCCGC/Scene.gif',
-            'https://i.ibb.co/kVTJCCGC/Scene.gif'
+            'assets/selectedwork/fitness_app.webp',
+            'assets/selectedwork/F1_App.webp',
+            'assets/selectedwork/Nat_Geo.webp',
+            'assets/selectedwork/Motocross_App.webp'
         ],
         role: 'UI Designer & Developer',
         platform: 'Web',
         timeline: '2 weeks',
         team: 'Solo project',
         externalLinks: {
-            behance: 'https://www.behance.net/gallery/call-recording-app',
-            dribbble: 'https://www.behance.net/gallery/call-recording-app',
+            behance: '',
+            dribbble: '',
         },
         seoMeta: {
-            title: 'Christmas UI - Festive Landing Page Design | Rish Designs',
-            description: 'Interactive 3D Christmas-themed landing page with immersive animations and festive design elements.'
+            title: 'Designing Mobile Experiences - Mobile App Design | Rish Designs',
+            description: 'A showcase of high-fidelity mobile interfaces designed with a focus on usability, scalability, and modern product thinking.'
         }
     },
     {
         id: 3,
-        title: 'Crypto Dashboard',
-        slug: 'crypto-dashboard',
-        category: 'SaaS',
+        title: 'Conversion-Focused Landing Pages',
+        slug: 'Conversion-Focused Landing Pages',
+        category: 'Landing Pages',
         type: 'project',
         template: 'project-showcase',
-        shortDescription: 'Financial analytics platform for tracking multi-chain crypto assets.',
-        heroPlaceholderImage: 'Assets/Creative Studio.webp',
+        shortDescription: 'A collection of landing pages designed with a focus on conversion optimization and user engagement.',
+        heroPlaceholderImage: 'assets/selectedwork/Creator-Network.webp',
         galleryPlaceholderImages: [
-            'Assets/Creative Studio.webp',
-            'Assets/Creative Studio.webp',
-            'Assets/Creative Studio.webp',
-            'Assets/Creative Studio.webp',
-            'Assets/Crypto%20UI%20Rish%20Designs.png'
+            'assets/selectedwork/Lunar-Website.webp',
+            'assets/selectedwork/header_thumbnail.webp',
+            'assets/selectedwork/header_thumbnail.webp',
+            'assets/selectedwork/header_thumbnail.webp',
+            'assets/selectedwork/header_thumbnail.webp'
         ],
         role: 'Product Designer',
         platform: 'Web App',
@@ -244,123 +254,12 @@ export const selectedWorkProjects = [
     },
     {
         id: 4,
-        title: 'Fitness Tracking App',
-        slug: 'fitness-tracking-app',
-        category: 'Mobile',
-        type: 'case-study',
-        template: 'case-study-default',
-        shortDescription: 'Personal carbon footprint tracker with gamified wellness features.',
-        heroPlaceholderImage: 'Assets/Porsche.webp',
-        galleryPlaceholderImages: [
-            'Assets/Porsche.webp',
-            'Assets/Porsche.webp',
-            'Assets/Porsche.webp'
-        ],
-        role: 'UX/UI Designer',
-        platform: 'iOS, Android',
-        timeline: '2.5 months',
-        team: 'Solo designer + 2 developers',
-        externalLinks: {
-            behance: '#',
-            dribbble: null
-        },
-        seoMeta: {
-            title: 'Fitness Tracking App - Gamified Wellness | Rish Designs',
-            description: 'Mobile fitness app case study featuring gamification, carbon footprint tracking, and personalized wellness insights.'
-        },
-        sections: {
-            overview: true,
-            problem: true,
-            goals: true,
-            research: false,
-            strategy: false,
-            wireframes: false,
-            finalDesign: true,
-            uxDecisions: false,
-            impact: true,
-            learnings: true
-        },
-        sectionContent: {
-            overview: {
-                title: 'Project Overview',
-                text: 'Fitness Track is an app that helps users track their physical activity while rewarding them for making sustainable travel choices.',
-                role: 'UX/UI Designer',
-                tools: ['Figma', 'Miro', 'Principle'],
-                responsibilities: [
-                    'User Research',
-                    'Wireframes',
-                    'UI Design',
-                    'Prototyping',
-                    'Usability Testing'
-                ]
-            },
-            problem: {
-                label: 'The Challenge',
-                headline: 'Most fitness apps focus purely on exercise metrics while ignoring the <span class="highlight">environmental impact</span> of daily travel choices.',
-                text: 'Users lacked a holistic view connecting their physical activity with sustainable habits, leading to lower motivation and engagement. Our challenge was to create a unified experience that bridges fitness tracking and environmental awareness.'
-            },
-            goals: {
-                title: 'Goals',
-                categories: [
-                    {
-                        icon: '\uD83C\uDFAF',
-                        title: 'Business Goals',
-                        items: [
-                            'Achieve 60%+ 7-day retention',
-                            'Differentiate from pure fitness apps',
-                            'Drive organic growth through social features'
-                        ]
-                    },
-                    {
-                        icon: '\uD83C\uDF31',
-                        title: 'User Goals',
-                        items: [
-                            'Unified fitness + sustainability tracking',
-                            'Motivating reward mechanics',
-                            'Simple interface during workouts'
-                        ]
-                    }
-                ]
-            },
-            finalDesign: {
-                title: 'Final Design',
-                description: 'Vibrant, motivating visuals designed for clarity during workouts.',
-                images: [
-                    'Assets/Fitness%20app%20UI.png',
-                    'Assets/Fitness%20app%20UI.png'
-                ],
-                layout: 'grid-2'
-            },
-            impact: {
-                title: 'Impact & Results',
-                text: 'The gamified approach to combining fitness with environmental awareness resonated strongly with the target audience.',
-                metrics: [
-                    { value: '65%', label: '7-Day Retention' },
-                    { value: '4.3', label: 'Average Rating' },
-                    { value: '8K', label: 'Active Users' }
-                ],
-                testimonial: {
-                    quote: 'Finally a fitness app that makes me want to walk more and actually shows my environmental impact!',
-                    author: 'Mike R., Early Adopter'
-                }
-            },
-            learnings: {
-                title: 'Key Learnings',
-                items: [
-                    'Gamification mechanics need to be carefully balanced \u2014 too many rewards dilute their motivational impact.',
-                    'Users preferred simple progress visuals over complex data dashboards during active workout sessions.'
-                ]
-            }
-        }
-    },
-    {
-        id: 5,
-        title: 'Food Delivery App',
-        slug: 'food-delivery-app',
-        category: 'Mobile',
+        title: 'Hero Sections',
+        slug: 'Hero Sections',
+        category: 'SaaS',
         type: 'project',
         template: 'project-showcase',
-        shortDescription: 'Modern food delivery platform with real-time tracking and ordering.',
+        shortDescription: 'A collection of high-impact header explorations for modern web experiences.',
         heroPlaceholderImage: 'Assets/Porsche.webp',
         galleryPlaceholderImages: [
             'Assets/Porsche.webp',
@@ -380,114 +279,7 @@ export const selectedWorkProjects = [
             description: 'Sleek food delivery app design featuring real-time tracking, personalized recommendations, and seamless checkout experience.'
         }
     },
-    {
-        id: 6,
-        title: 'Glassmorphism Landing',
-        slug: 'glassmorphism-landing',
-        category: 'Landing Pages',
-        type: 'project',
-        template: 'project-showcase',
-        shortDescription: 'Premium landing page showcasing modern glassmorphic design trends.',
-        heroPlaceholderImage: 'Assets/Porsche.webp',
-        galleryPlaceholderImages: [
-            'Assets/Porsche.webp',
-            'Assets/Porsche.webp',
-            'Assets/Porsche.webp'
-        ],
-        role: 'UI Designer & Frontend Developer',
-        platform: 'Web',
-        timeline: '3 weeks',
-        team: 'Solo project',
-        externalLinks: {
-            behance: null,
-            dribbble: null
-        },
-        seoMeta: {
-            title: 'Glassmorphism Landing Page - Premium Design | Rish Designs',
-            description: 'Modern landing page showcasing glassmorphism design trends with blur effects, transparency, and premium animations.'
-        }
-    },
-    {
-        id: 7,
-        title: 'Liquid Glass SaaS',
-        slug: 'liquid-glass-saas',
-        category: 'SaaS',
-        type: 'project',
-        template: 'project-showcase',
-        shortDescription: 'Enterprise SaaS platform with advanced workflow automation features.',
-        heroPlaceholderImage: 'Assets/Fitness App.webp',
-        galleryPlaceholderImages: [
-            'Assets/Fitness App.webp',
-            'Assets/Fitness App.webp',
-            'Assets/Fitness App.webp'
-        ],
-        role: 'Lead Product Designer',
-        platform: 'Web App',
-        timeline: '6 months',
-        team: '3 Designers, 5 Developers, 1 PM',
-        externalLinks: {
-            behance: null,
-            dribbble: null
-        },
-        seoMeta: {
-            title: 'Liquid Glass SaaS - Enterprise Platform | Rish Designs',
-            description: 'Enterprise-grade SaaS platform design with advanced workflow automation, team collaboration, and analytics features.'
-        }
-    },
-    {
-        id: 8,
-        title: 'Podcast Player App',
-        slug: 'podcast-player-app',
-        category: 'Mobile',
-        type: 'project',
-        template: 'project-showcase',
-        shortDescription: 'Minimalist podcast player with smart playlists and offline downloads.',
-        heroPlaceholderImage: 'Assets/Fitness App.webp',
-        galleryPlaceholderImages: [
-            'Assets/Fitness App.webp',
-            'Assets/Fitness App.webp',
-            'Assets/Fitness App.webp'
-        ],
-        role: 'UI/UX Designer',
-        platform: 'iOS',
-        timeline: '2 months',
-        team: 'Solo designer + 1 developer',
-        externalLinks: {
-            behance: null,
-            dribbble: null
-        },
-        seoMeta: {
-            title: 'Podcast Player App - Minimalist Design | Rish Designs',
-            description: 'Clean, minimalist podcast player app with smart playlists, offline downloads, and personalized discovery features.'
-        }
-    },
-    {
-        id: 9,
-        title: 'NFT Marketplace',
-        slug: 'nft-marketplace',
-        category: 'SaaS',
-        type: 'project',
-        template: 'project-showcase',
-        shortDescription: 'Next-gen NFT marketplace with advanced analytics and social features.',
-        heroPlaceholderImage: 'Assets/NFT%20Web%20app.png',
-        galleryPlaceholderImages: [
-            'Assets/NFT%20Web%20app.png',
-            'Assets/NFT%20Web%20app.png',
-            'Assets/NFT%20Web%20app.png'
-        ],
-        role: 'Product Designer',
-        platform: 'Web3',
-        timeline: '4 months',
-        team: '2 Designers, 4 Developers, 1 PM',
-        externalLinks: {
-            behance: null,
-            dribbble: null
-        },
-        seoMeta: {
-            title: 'NFT Marketplace - Web3 Platform | Rish Designs',
-            description: 'Next-generation NFT trading platform with advanced analytics, social features, and seamless Web3 integration.'
-        }
-    }
+
 ];
 
 // Helper function to get project by slug

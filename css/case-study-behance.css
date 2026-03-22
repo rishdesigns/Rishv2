@@ -852,87 +852,95 @@
 }
 
 /* ================================================================
-   IMPACT — OUTCOME CARDS & TESTIMONIAL
+   IMPACT — REDESIGNED (Label + Headline + Cards)
    ================================================================ */
 
-.template-case-study-behance .outcomes-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 2rem;
-    max-width: 1000px;
-    margin: 3rem auto 0;
+.template-case-study-behance .impact-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--cs-accent);
+    margin: 0 0 1.75rem;
 }
 
-.template-case-study-behance .outcome-card {
-    text-align: center;
-    padding: 3rem 1.5rem;
+.template-case-study-behance .impact-headline {
+    font-family: 'Outfit', serif;
+    font-size: clamp(2rem, 4.5vw, 3.2rem);
+    font-weight: 600;
+    font-style: italic;
+    color: var(--cs-text);
+    line-height: 1.2;
+    margin: 0 0 2rem;
+    letter-spacing: -0.03em;
+    max-width: 650px;
+}
+
+.template-case-study-behance .impact-description {
+    max-width: 700px;
+    margin-bottom: 3.5rem;
+}
+
+.template-case-study-behance .impact-description p {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: var(--cs-text-secondary);
+    margin: 0;
+}
+
+.template-case-study-behance .impact-highlights-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+}
+
+.template-case-study-behance .impact-highlight-card {
     background: var(--cs-surface);
     border: 1px solid var(--cs-border);
     border-radius: var(--cs-radius);
+    padding: 2.25rem 2rem;
     transition: all 0.4s var(--cs-transition);
 }
 
-.template-case-study-behance .outcome-card:hover {
+.template-case-study-behance .impact-highlight-card:hover {
+    border-color: rgba(89, 166, 255, 0.15);
     background: rgba(255, 255, 255, 0.04);
-    transform: translateY(-6px);
+    transform: translateY(-4px);
 }
 
-.template-case-study-behance .outcome-metric {
+.template-case-study-behance .impact-highlight-icon {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(89, 166, 255, 0.08);
+    border: 1px solid rgba(89, 166, 255, 0.12);
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+    color: var(--cs-accent);
+}
+
+.template-case-study-behance .impact-highlight-icon svg {
+    width: 22px;
+    height: 22px;
+}
+
+.template-case-study-behance .impact-highlight-title {
     font-family: 'Outfit', sans-serif;
-    font-size: 3.5rem;
+    font-size: 1rem;
     font-weight: 700;
-    color: #ffffff;
-    margin: 0 0 0.5rem;
-    letter-spacing: -0.02em;
-}
-
-.template-case-study-behance .outcome-label {
-    font-size: 0.85rem;
-    color: var(--cs-text-muted);
+    color: var(--cs-text);
     text-transform: uppercase;
-    letter-spacing: 0.1em;
-    font-weight: 600;
-}
-
-.template-case-study-behance .testimonial {
-    max-width: 800px;
-    margin: 4rem auto 0;
-    padding: 3.5rem 2.5rem;
-    background: var(--cs-surface);
-    border: 1px solid var(--cs-border);
-    border-radius: 20px;
-    text-align: center;
-    position: relative;
-}
-
-.template-case-study-behance .testimonial::before {
-    content: "\201C";
-    position: absolute;
-    top: -15px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 7rem;
-    color: rgba(255, 255, 255, 0.04);
-    font-family: serif;
-    line-height: 1;
-}
-
-.template-case-study-behance .testimonial-quote {
-    font-size: 1.35rem;
-    font-style: italic;
-    line-height: 1.65;
-    color: rgba(255, 255, 255, 0.9);
-    margin: 0 0 1.5rem;
-    position: relative;
-    z-index: 1;
-}
-
-.template-case-study-behance .testimonial-author {
-    font-size: 0.95rem;
-    color: var(--cs-text-muted);
-    font-style: normal;
-    display: block;
     letter-spacing: 0.04em;
+    margin: 0 0 0.85rem;
+}
+
+.template-case-study-behance .impact-highlight-text {
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: var(--cs-text-secondary);
+    margin: 0;
 }
 
 /* ================================================================
@@ -1055,21 +1063,12 @@
         padding: 1.5rem;
     }
 
-    .template-case-study-behance .testimonial {
-        padding: 2.5rem 1.5rem;
+    .template-case-study-behance .impact-highlights-grid {
+        grid-template-columns: repeat(2, 1fr);
     }
 
-    .template-case-study-behance .testimonial-quote {
-        font-size: 1.15rem;
-    }
-
-    .template-case-study-behance .learnings-list li {
-        padding: 1rem 1.25rem;
-        font-size: 0.95rem;
-    }
-
-    .template-case-study-behance .outcome-metric {
-        font-size: 2.5rem;
+    .template-case-study-behance .impact-highlight-card:last-child {
+        grid-column: 1 / -1;
     }
 }
 
@@ -1090,8 +1089,16 @@
         gap: 2rem;
     }
 
-    .template-case-study-behance .project-title {
-        font-size: 2rem;
+    .template-case-study-behance .impact-highlights-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .template-case-study-behance .impact-highlight-card:last-child {
+        grid-column: auto;
+    }
+
+    .template-case-study-behance .impact-headline {
+        font-size: 1.75rem;
     }
 }
 
