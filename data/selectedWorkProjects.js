@@ -203,12 +203,12 @@ export const selectedWorkProjects = [
         type: 'project',
         template: 'project-showcase',
         shortDescription: 'A showcase of high-fidelity mobile interfaces designed with a focus on usability, scalability, and modern product thinking.',
-        heroPlaceholderImage: 'assets/app_thumbnail.webp',
+        heroPlaceholderImage: 'Assets/selectedwork/App_thumbnail.webp',
         galleryPlaceholderImages: [
-            'assets/fitness app.webp',
-            'assets/F1 App.webp',
-            'assets/Nat Geo.webp',
-            'assets/Motocross App.webp'
+            'Assets/selectedwork/Fitness_App.webp',
+            'Assets/selectedwork/F1_App.webp',
+            'Assets/selectedwork/Nat_Geo.webp',
+            'Assets/selectedwork/Motocross_App.webp'
         ],
         role: 'UI Designer & Developer',
         platform: 'Web',
@@ -231,13 +231,13 @@ export const selectedWorkProjects = [
         type: 'project',
         template: 'project-showcase',
         shortDescription: 'A collection of landing pages designed with a focus on conversion optimization and user engagement.',
-        heroPlaceholderImage: 'assets/selectedwork/Creator-Network.webp',
+        heroPlaceholderImage: 'Assets/selectedwork/Creator-Network.webp',
         galleryPlaceholderImages: [
-            'assets/selectedwork/Lunar-Website.webp',
-            'assets/selectedwork/header_thumbnail.webp',
-            'assets/selectedwork/header_thumbnail.webp',
-            'assets/selectedwork/header_thumbnail.webp',
-            'assets/selectedwork/header_thumbnail.webp'
+            'Assets/selectedwork/Lunar-Website.webp',
+            'Assets/selectedwork/Header_thumbnail.webp',
+            'Assets/selectedwork/Header_thumbnail.webp',
+            'Assets/selectedwork/Header_thumbnail.webp',
+            'Assets/selectedwork/Header_thumbnail.webp'
         ],
         role: 'Product Designer',
         platform: 'Web App',
