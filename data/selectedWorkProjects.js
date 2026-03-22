@@ -203,12 +203,12 @@ export const selectedWorkProjects = [
         type: 'project',
         template: 'project-showcase',
         shortDescription: 'A showcase of high-fidelity mobile interfaces designed with a focus on usability, scalability, and modern product thinking.',
-        heroPlaceholderImage: 'assets/selectedwork/app_thumbnail.webp',
+        heroPlaceholderImage: 'assets/app_thumbnail.webp',
         galleryPlaceholderImages: [
-            'assets/selectedwork/fitness_app.webp',
-            'assets/selectedwork/F1_App.webp',
-            'assets/selectedwork/Nat_Geo.webp',
-            'assets/selectedwork/Motocross_App.webp'
+            'assets/fitness app.webp',
+            'assets/F1 App.webp',
+            'assets/Nat Geo.webp',
+            'assets/Motocross App.webp'
         ],
         role: 'UI Designer & Developer',
         platform: 'Web',
