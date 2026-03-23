@@ -1083,7 +1083,7 @@ body {
 
 @media (max-width:780px) {
   .hero {
-    padding: calc(8vmin + 94px) 4vmin 18vmin;
+    padding: calc(8vmin + 94px) 4vmin 2vmin;
   }
 
   .nav-logo {
@@ -1093,7 +1093,8 @@ body {
   /* Increase card size on tablet / large mobile for better legibility */
   .card {
     width: clamp(160px, 40vw, 260px);
-    height: clamp(110px, 32vw, 200px);
+    aspect-ratio: 400 / 560;
+    height: auto;
   }
 }
 
@@ -1109,10 +1110,9 @@ body {
   }
 
   .hero {
-    min-height: 66vh;
-    padding-bottom: 22vmin;
     padding-left: 3vmin;
     padding-right: 3vmin;
+    padding-bottom: 2vmin;
   }
 
   .name {
@@ -1129,7 +1129,8 @@ body {
   /* Slightly reduce card at very small widths so it fits comfortably */
   .card {
     width: clamp(140px, 46vw, 220px);
-    height: clamp(100px, 40vw, 160px)
+    aspect-ratio: 400 / 560;
+    height: auto;
   }
 
   /* On very small screens we will disable auto-scroll; JS will detect */
@@ -1494,13 +1495,19 @@ body {
 
 @media screen and (max-width: 768px) {
   .hero {
-    height: auto;
+    height: 100vh;
+    height: 100svh;
     min-height: 100vh;
+    min-height: 100svh;
+  }
+
+  .hero>.container {
+    padding-top: 0;
   }
 
   .portfolio-strip {
-    padding: 20px 0 50px;
-    margin-top: 40px;
+    padding: 20px 0 20px;
+    margin-top: 20px;
     max-height: none;
   }
 
@@ -1519,28 +1526,29 @@ body {
 @media screen and (max-height: 850px) and (min-width: 1025px) {
   .hero {
     justify-content: space-between;
-    /* Switch back to distribute on short screens */
-    padding-bottom: 4vh;
+    padding-bottom: 2vh;
   }
 
   .hero>.container {
-    padding-top: 80px;
+    padding-top: 40px;
     /* Space from nav */
   }
 
   .portfolio-strip {
     position: relative;
     /* Return to flow to prevent overlap */
-    padding: 1.5vh 0 10vh;
+    padding: 2vh 0 4vh;
+    margin: 20px 0 0 0;
   }
 
   .card {
     width: clamp(220px, 24vw, 320px);
-    max-height: 28vh;
+    aspect-ratio: 4 / 3;
+    height: auto;
   }
 
   .hero-content {
-    margin-top: 40px;
+    margin-top: 30px;
   }
 }
 
@@ -2204,20 +2212,6 @@ body {
 
 /* Tablet Spans (768px - 1024px) */
 @media screen and (max-width: 1024px) {
-
-  .card-impact,
-  .card-tools,
-  .card-capabilities,
-  .card-education {
-    grid-column: span 12;
-  }
-
-  .card-reach,
-  .card-process,
-  .card-achievements {
-    grid-column: span 6;
-  }
-
   .about-me {
     padding: 80px 4vw;
   }
@@ -2541,37 +2535,29 @@ body {
   }
 }
 
-/* Responsive */
-@media (max-width: 1024px) {
+/* Responsive — Tablet (769px – 1024px, covers iPad Pro portrait etc.) */
+@media (max-width: 1024px) and (min-width: 768px) {
   .about-grid {
     grid-template-columns: repeat(2, 1fr);
     grid-auto-rows: auto;
   }
 
-  .card-impact {
+  .about-card {
     grid-column: span 1;
-    grid-row: span 2;
   }
 
-  .card-tools {
-    grid-column: span 1;
-    grid-row: span 1;
-  }
+  /* Row 1: Impact + Tools (natural order) */
+  .card-impact { order: 1; }
+  .card-tools { order: 2; }
 
-  .card-reach {
-    grid-column: span 1;
-    grid-row: span 2;
-  }
+  /* Row 2: Reach + Process (paired together) */
+  .card-reach { order: 3; }
+  .card-process { order: 4; }
 
-  .card-capabilities {
-    grid-column: span 2;
-    grid-row: span 1;
-  }
-
-  .card-process {
-    grid-column: span 1;
-    grid-row: span 1;
-  }
+  /* Row 3-5: Full-width cards */
+  .card-capabilities { order: 5; grid-column: span 2; }
+  .card-education { order: 6; grid-column: span 2; }
+  .card-achievements { order: 7; grid-column: span 2; }
 }
 
 @media (max-width: 768px) {
