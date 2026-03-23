@@ -101,7 +101,7 @@ export const selectedWorkProjects = [
                 title: 'Research & Discovery',
                 text: 'Analysed 3 competing streaming platforms across three specific dimensions: how quickly a new user reaches a live stream, how creator credibility is established on a zero-reputation platform, and how notification systems drive re-engagement without fatigue. Nielsen Gracenote\'s 2025 State of Play report provided the quantitative anchor, confirming that discovery friction drives the highest abandonment among 18 to 24 year olds. Community research across streaming forums on Reddit and Discord surfaced the qualitative layer: mobile users do not fail because the content is bad. They fail because the path to content is broken.',
                 images: [
-                    'Assets/CA-STREAMX.PNG'
+                    'Assets/CA-STREAMX.webp'
                 ],
                 layout: 'grid-2'
             },
@@ -145,7 +145,7 @@ export const selectedWorkProjects = [
                     {
                         title: 'Segmented Notification Tabs',
                         text: 'Splitting notifications into Unread, Following and All mirrors the mental model users already apply manually. Signal is separated from noise at a structural level so every notification feels relevant rather than something to ignore.',
-                        image: 'Assets/segmentedtab.webp'
+                        image: 'Assets/Segmentedtab.webp'
                     },
                     {
                         title: 'Picture in Picture Host Avatar on Live Stream',
