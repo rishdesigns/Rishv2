@@ -189,7 +189,7 @@ export const selectedWorkProjects = [
     {
         id: 2,
         title: 'Designing Mobile Experiences',
-        slug: 'Designing Mobile Experiences',
+        slug: 'Designing-Mobile-Experiences',
         category: 'Mobile',
         type: 'project',
         template: 'project-showcase',
@@ -217,7 +217,7 @@ export const selectedWorkProjects = [
     {
         id: 3,
         title: 'Conversion-Focused Landing Pages',
-        slug: 'Conversion-Focused Landing Pages',
+        slug: 'Conversion-Focused-Landing-Pages',
         category: 'Landing Pages',
         type: 'project',
         template: 'project-showcase',
@@ -246,7 +246,7 @@ export const selectedWorkProjects = [
     {
         id: 4,
         title: 'Hero Sections',
-        slug: 'Hero Sections',
+        slug: 'Hero-Sections',
         category: 'SaaS',
         type: 'project',
         template: 'project-showcase',
