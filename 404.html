@@ -1,0 +1,476 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="Page not found — Rishabh Saxena, UX/UI & Product Designer" />
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="apple-touch-icon" sizes="180x180" href="Assets/favicon_io/apple-touch-icon.png?v=2">
+  <link rel="icon" type="image/png" sizes="32x32" href="Assets/favicon_io/favicon-32x32.png?v=2">
+  <link rel="icon" type="image/png" sizes="16x16" href="Assets/favicon_io/favicon-16x16.png?v=2">
+  <link rel="shortcut icon" href="Assets/favicon_io/favicon.ico?v=2">
+  <link rel="icon" type="image/x-icon" href="Assets/favicon_io/favicon.ico?v=2">
+  <meta name="theme-color" content="#0a0a0a" />
+  <meta property="og:title" content="404 — Page Not Found | Rishabh Saxena" />
+  <meta property="og:description" content="The page you're looking for doesn't exist. Let's get you back to the good stuff." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://res.cloudinary.com/rishdesigns/image/upload/v1774274469/OG_TAG_new.webp" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="404 — Page Not Found | Rishabh Saxena" />
+  <meta name="twitter:description" content="The page you're looking for doesn't exist. Let's get you back to the good stuff." />
+  <meta name="twitter:image" content="https://res.cloudinary.com/rishdesigns/image/upload/v1774274469/OG_TAG_new.webp" />
+  <title>404 — Page Not Found | Rishabh Saxena</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=Outfit:wght@100..900&display=swap"
+    rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #16151A;
+      --accent: #59a6ff;
+      --orange: #FF5A38;
+      --muted: #9aa6b2;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg);
+      color: #fff;
+      font-family: 'Outfit', 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Animated glow orbs — same as hero */
+    body::before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 0;
+      width: 100vmax;
+      height: 80vmax;
+      background: radial-gradient(circle at center, rgba(56, 112, 255, 0.35), transparent 55%);
+      filter: blur(80px);
+      pointer-events: none;
+      z-index: 0;
+      transform: translate(-50%, -40%) scale(1);
+      animation: floatOrb1 20s ease-in-out infinite alternate;
+    }
+
+    body::after {
+      content: '';
+      position: absolute;
+      right: 50%;
+      top: 0;
+      width: 80vmax;
+      height: 80vmax;
+      background: radial-gradient(circle at center, rgba(139, 92, 246, 0.15), transparent 50%);
+      filter: blur(90px);
+      pointer-events: none;
+      opacity: 0.6;
+      z-index: 0;
+      transform: translate(50%, -30%);
+      animation: floatOrb2 22s ease-in-out infinite alternate-reverse;
+    }
+
+    /* Grid background */
+    .bg-grid {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.02) 0 1px, transparent 1px 4px),
+        repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.02) 0 1px, transparent 1px 4px);
+      mix-blend-mode: overlay;
+      opacity: 0.08;
+      z-index: 0;
+    }
+
+    @keyframes floatOrb1 {
+      0% {
+        transform: translate(-50%, -40%) scale(1);
+      }
+
+      50% {
+        transform: translate(-40%, -30%) scale(1.1);
+      }
+
+      100% {
+        transform: translate(-60%, -35%) scale(1);
+      }
+    }
+
+    @keyframes floatOrb2 {
+      0% {
+        transform: translate(50%, -30%) scale(1.1);
+        opacity: 0.5;
+      }
+
+      50% {
+        transform: translate(40%, -20%) scale(1);
+        opacity: 0.8;
+      }
+
+      100% {
+        transform: translate(60%, -25%) scale(1.1);
+        opacity: 0.5;
+      }
+    }
+
+    /* Content */
+    .error-container {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      padding: 2rem;
+      max-width: 600px;
+    }
+
+    /* Giant glitchy 404 number */
+    .error-code {
+      font-family: 'Outfit', sans-serif;
+      font-size: clamp(8rem, 25vw, 14rem);
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: -0.04em;
+      background: linear-gradient(180deg, #fff 0%, rgba(255, 255, 255, 0.15) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      position: relative;
+      user-select: none;
+      animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      opacity: 0;
+    }
+
+    /* Glitch layers */
+    .error-code::before,
+    .error-code::after {
+      content: '404';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, #fff 0%, rgba(255, 255, 255, 0.15) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      opacity: 0;
+    }
+
+    .error-code::before {
+      animation: glitch1 4s infinite linear;
+      color: var(--accent);
+    }
+
+    .error-code::after {
+      animation: glitch2 4s infinite linear;
+      color: var(--orange);
+    }
+
+    @keyframes glitch1 {
+
+      0%,
+      92%,
+      100% {
+        opacity: 0;
+        transform: none;
+      }
+
+      93% {
+        opacity: 0.8;
+        transform: translate(-3px, -1px);
+        -webkit-text-fill-color: rgba(89, 166, 255, 0.5);
+      }
+
+      94% {
+        opacity: 0;
+        transform: none;
+      }
+
+      96% {
+        opacity: 0.6;
+        transform: translate(2px, 1px);
+        -webkit-text-fill-color: rgba(89, 166, 255, 0.4);
+      }
+
+      97% {
+        opacity: 0;
+      }
+    }
+
+    @keyframes glitch2 {
+
+      0%,
+      94%,
+      100% {
+        opacity: 0;
+        transform: none;
+      }
+
+      95% {
+        opacity: 0.7;
+        transform: translate(3px, 2px);
+        -webkit-text-fill-color: rgba(255, 90, 56, 0.5);
+      }
+
+      96% {
+        opacity: 0;
+      }
+
+      98% {
+        opacity: 0.5;
+        transform: translate(-2px, -2px);
+        -webkit-text-fill-color: rgba(255, 90, 56, 0.3);
+      }
+
+      99% {
+        opacity: 0;
+      }
+    }
+
+    /* Accent line under 404 */
+    .accent-line {
+      width: 60px;
+      height: 3px;
+      background: linear-gradient(90deg, var(--orange), var(--accent));
+      border-radius: 2px;
+      margin: 1.5rem auto 2rem;
+      opacity: 0;
+      animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.15s forwards;
+    }
+
+    .error-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: clamp(1.4rem, 3.5vw, 2rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.75rem;
+      opacity: 0;
+      animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.25s forwards;
+    }
+
+    .error-desc {
+      font-family: 'Instrument Sans', sans-serif;
+      color: var(--muted);
+      font-size: clamp(0.95rem, 2vw, 1.1rem);
+      line-height: 1.6;
+      margin-bottom: 2.5rem;
+      opacity: 0;
+      animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.35s forwards;
+    }
+
+    /* CTA buttons */
+    .cta-group {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.45s forwards;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0.8rem 1.6rem;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      text-decoration: none;
+      cursor: pointer;
+      transition: transform 0.22s cubic-bezier(.2, .9, .2, 1), box-shadow 0.22s, filter 0.18s;
+      border: none;
+      font-family: 'Outfit', sans-serif;
+    }
+
+    .btn-primary {
+      background: linear-gradient(90deg, #FF5A38, #FF8A66);
+      color: #fff;
+      box-shadow: 0 6px 18px rgba(255, 90, 56, 0.12);
+    }
+
+    .btn-primary:hover {
+      transform: scale(1.035);
+      box-shadow: 0 14px 40px rgba(255, 90, 56, 0.22);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.06);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(12px);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.2);
+      transform: scale(1.035);
+    }
+
+    .btn svg {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Floating particles */
+    .particles {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      overflow: hidden;
+    }
+
+    .particle {
+      position: absolute;
+      width: 3px;
+      height: 3px;
+      background: rgba(89, 166, 255, 0.4);
+      border-radius: 50%;
+      animation: float linear infinite;
+    }
+
+    .particle:nth-child(2) {
+      background: rgba(139, 92, 246, 0.4);
+    }
+
+    .particle:nth-child(3) {
+      background: rgba(255, 90, 56, 0.3);
+    }
+
+    .particle:nth-child(5) {
+      background: rgba(139, 92, 246, 0.3);
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(100vh) scale(0);
+        opacity: 0;
+      }
+
+      10% {
+        opacity: 1;
+      }
+
+      90% {
+        opacity: 1;
+      }
+
+      100% {
+        transform: translateY(-10vh) scale(1);
+        opacity: 0;
+      }
+    }
+
+    /* Nav logo top-left */
+    .nav-logo-wrap {
+      position: absolute;
+      top: 30px;
+      left: 6vw;
+      z-index: 10;
+      opacity: 0;
+      animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.1s forwards;
+    }
+
+    .nav-logo-wrap img {
+      height: 44px;
+    }
+
+    @media (max-width: 480px) {
+      .cta-group {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .btn {
+        width: 100%;
+        justify-content: center;
+        max-width: 280px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="bg-grid" aria-hidden="true"></div>
+
+  <!-- Floating particles -->
+  <div class="particles" aria-hidden="true"></div>
+
+  <!-- Logo -->
+  <a href="index.html" class="nav-logo-wrap" aria-label="Go to homepage">
+    <img src="Assets/Logo%20Rish%20Designs.svg" alt="Rish Designs logo">
+  </a>
+
+  <div class="error-container">
+    <div class="error-code" aria-hidden="true">404</div>
+    <div class="accent-line"></div>
+    <h1 class="error-title">Lost in the design space</h1>
+    <p class="error-desc">
+      The page you're looking for doesn't exist or has been moved.
+      Let's get you back to the good stuff.
+    </p>
+    <div class="cta-group">
+      <a href="index.html" class="btn btn-primary">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+          <polyline points="9 22 9 12 15 12 15 22" />
+        </svg>
+        Back to Home
+      </a>
+      <a href="index.html#selected-work" class="btn btn-secondary">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round">
+          <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+          <line x1="8" y1="21" x2="16" y2="21" />
+          <line x1="12" y1="17" x2="12" y2="21" />
+        </svg>
+        View My Work
+      </a>
+    </div>
+  </div>
+
+  <script>
+    // Generate floating particles
+    const container = document.querySelector('.particles');
+    for (let i = 0; i < 20; i++) {
+      const p = document.createElement('div');
+      p.classList.add('particle');
+      p.style.left = Math.random() * 100 + '%';
+      p.style.width = p.style.height = (Math.random() * 3 + 1.5) + 'px';
+      p.style.animationDuration = (Math.random() * 12 + 8) + 's';
+      p.style.animationDelay = (Math.random() * 10) + 's';
+      container.appendChild(p);
+    }
+  </script>
+</body>
+
+</html>
