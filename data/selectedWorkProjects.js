@@ -190,7 +190,7 @@ export const selectedWorkProjects = [
         id: 2,
         title: 'Designing Mobile Experiences',
         slug: 'Designing Mobile Experiences',
-        category: 'Mobile Apps',
+        category: 'Mobile',
         type: 'project',
         template: 'project-showcase',
         shortDescription: 'A showcase of high-fidelity mobile interfaces designed with a focus on usability, scalability, and modern product thinking.',
