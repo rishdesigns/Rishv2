@@ -128,8 +128,7 @@ export const selectedWorkProjects = [
                 title: 'Wireframes & Iterations',
                 description: 'Iterated through 3 major layout directions for the recording interface and playback experience, testing each with 5 users.',
                 images: [
-                    'Assets/Streaming App.webp',
-                    'Assets/Streaming App.webp'
+                    'Assets/selectedwork/Wireframes-Showcase.webp'
                 ],
                 layout: 'grid-2'
             },
@@ -210,9 +209,9 @@ export const selectedWorkProjects = [
             'Assets/selectedwork/Nat_Geo.webp',
             'Assets/selectedwork/Motocross_App.webp'
         ],
-        role: 'UI Designer & Developer',
-        platform: 'Web',
-        timeline: '2 weeks',
+        role: 'UX/UI Designer',
+        platform: 'iOS, Android',
+        timeline: '',
         team: 'Solo project',
         externalLinks: {
             behance: '',
@@ -233,16 +232,16 @@ export const selectedWorkProjects = [
         shortDescription: 'A collection of landing pages designed with a focus on conversion optimization and user engagement.',
         heroPlaceholderImage: 'Assets/selectedwork/Creator-Network.webp',
         galleryPlaceholderImages: [
-            'Assets/selectedwork/Lunar-Website.webp',
-            'Assets/selectedwork/Header_thumbnail.webp',
-            'Assets/selectedwork/Header_thumbnail.webp',
-            'Assets/selectedwork/Header_thumbnail.webp',
-            'Assets/selectedwork/Header_thumbnail.webp'
+            'Assets/Anime.webp',
+            'Assets/Creative Studio.webp',
+            'Assets/Game-Studio.webp',
+            'Assets/Rolls-Royce.webp',
+            'Assets/Lunar-Website.webp'
         ],
         role: 'Product Designer',
-        platform: 'Web App',
-        timeline: '4 months',
-        team: '2 Designers, 3 Developers',
+        platform: 'Web',
+        timeline: '',
+        team: 'Solo',
         externalLinks: {
             behance: null,
             dribbble: null
@@ -262,14 +261,14 @@ export const selectedWorkProjects = [
         shortDescription: 'A collection of high-impact header explorations for modern web experiences.',
         heroPlaceholderImage: 'Assets/Porsche.webp',
         galleryPlaceholderImages: [
-            'Assets/Porsche.webp',
-            'Assets/Porsche.webp',
+            'Assets/NFT Marketplace Website.webp',
+            'Assets/Valorant.webp',
             'Assets/Porsche.webp'
         ],
         role: 'UI/UX Designer',
-        platform: 'iOS, Android',
-        timeline: '3 months',
-        team: '1 Designer, 4 Developers, 1 PM',
+        platform: 'Web',
+        timeline: '',
+        team: 'Solo',
         externalLinks: {
             behance: null,
             dribbble: null
