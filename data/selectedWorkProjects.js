@@ -145,7 +145,7 @@ export const selectedWorkProjects = [
                     {
                         title: 'Segmented Notification Tabs',
                         text: 'Splitting notifications into Unread, Following and All mirrors the mental model users already apply manually. Signal is separated from noise at a structural level so every notification feels relevant rather than something to ignore.',
-                        image: 'Assets/segmentedtab.webp'
+                        image: 'Assets/Segmented.webp'
                     },
                     {
                         title: 'Picture in Picture Host Avatar on Live Stream',
