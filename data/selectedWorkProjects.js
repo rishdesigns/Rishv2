@@ -26,15 +26,15 @@ export const selectedWorkProjects = [
         ],
         role: 'Lead UX/UI Designer',
         platform: 'iOS, Android',
-        timeline: '3 months',
-        team: '1 Designer, 2 Developers, 1 PM',
+        timeline: '',
+        team: 'Solo',
         externalLinks: {
-            behance: 'https://www.behance.net/gallery/call-recording-app', // Sample Behance link
-            dribbble: 'https://www.behance.net/gallery/call-recording-app'
+            behance: '', // Sample Behance link
+            dribbble: ''
         },
         seoMeta: {
-            title: 'Call Recording App - UX Case Study | Rish Designs',
-            description: 'Deep dive into designing an intelligent call recording app with AI-powered transcription and insights for iOS and Android.'
+            title: 'Stream X: Social Live Streaming Platform - UX Case Study | Rish Designs',
+            description: 'A mobile-native streaming platform built to solve the one problem Twitch, YouTube Live and TikTok never solved on mobile: getting the right user to the right stream in seconds.'
         },
         // Modular Section Toggles — set true/false to show/hide
         sections: {
@@ -99,11 +99,9 @@ export const selectedWorkProjects = [
             },
             research: {
                 title: 'Research & Discovery',
-                text: 'Analysed 5 competing streaming platforms across three specific dimensions: how quickly a new user reaches a live stream, how creator credibility is established on a zero-reputation platform, and how notification systems drive re-engagement without fatigue. Nielsen Gracenote\'s 2025 State of Play report provided the quantitative anchor, confirming that discovery friction drives the highest abandonment among 18 to 24 year olds. Community research across streaming forums on Reddit and Discord surfaced the qualitative layer: mobile users do not fail because the content is bad. They fail because the path to content is broken.',
+                text: 'Analysed 3 competing streaming platforms across three specific dimensions: how quickly a new user reaches a live stream, how creator credibility is established on a zero-reputation platform, and how notification systems drive re-engagement without fatigue. Nielsen Gracenote\'s 2025 State of Play report provided the quantitative anchor, confirming that discovery friction drives the highest abandonment among 18 to 24 year olds. Community research across streaming forums on Reddit and Discord surfaced the qualitative layer: mobile users do not fail because the content is bad. They fail because the path to content is broken.',
                 images: [
-                    'Assets/CA-STREAMX.PNG',
-                    'Assets/Fitness App.webp',
-                    'Assets/Fitness App.webp'
+                    'Assets/CA-STREAMX.PNG'
                 ],
                 layout: 'grid-2'
             },
@@ -137,8 +135,7 @@ export const selectedWorkProjects = [
                 description: 'The polished high-fidelity interface with dark mode, clear hierarchy, and immersive audio waveform visualizations.',
                 images: [
                     'Assets/Streaming App.webp',
-                    'Assets/Streaming App.webp',
-                    'Assets/Streaming App.webp'
+                    'Assets/Stream_X_Second.webp'
                 ],
                 layout: 'stacked'
             },
@@ -148,12 +145,12 @@ export const selectedWorkProjects = [
                     {
                         title: 'Segmented Notification Tabs',
                         text: 'Splitting notifications into Unread, Following and All mirrors the mental model users already apply manually. Signal is separated from noise at a structural level so every notification feels relevant rather than something to ignore.',
-                        image: 'Assets/Call%20recording%20app%20Rish%20Designs.png'
+                        image: 'Assets/segmentedtab.webp'
                     },
                     {
                         title: 'Picture in Picture Host Avatar on Live Stream',
                         text: 'The floating camera feed of the streamer in the bottom corner maintains the parasocial connection that makes live streaming worth watching. It also tells the user instantly that someone is live right now, not a recording.',
-                        image: 'Assets/Call%20recording%20app%20Rish%20Designs.png'
+                        image: 'Assets/Streamer.webp'
                     },
                     {
                         title: 'Progressive Disclosure',
@@ -168,18 +165,13 @@ export const selectedWorkProjects = [
                 text: 'Stream X was a self-initiated product design study treated with the same rigour as a live product. No brief, no team, no shortcuts. Every decision was researched, justified and documented from first principles.',
                 highlights: [
                     {
-                        icon: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>',
-                        title: 'Complete User Journey',
-                        text: 'From first tap on Home to active Live Session covered across 5 screens with zero gaps in the flow.'
-                    },
-                    {
                         icon: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>',
                         title: 'Research Backed',
                         text: 'Every core design decision validated against two published industry reports and a competitive teardown of 5 platforms.'
                     },
                     {
                         icon: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>',
-                        title: 'Director-Level Process',
+                        title: 'End to End Design Process',
                         text: 'Solo execution across research, competitive analysis, UX strategy, information architecture and high-fidelity design.'
                     }
                 ]
@@ -187,9 +179,9 @@ export const selectedWorkProjects = [
             learnings: {
                 title: 'Key Learnings',
                 items: [
-                    'Early prototyping with real audio data was critical \u2014 synthetic test data hid transcription UX issues that only surfaced with real conversations.',
-                    'Users strongly preferred progressive disclosure over feature-rich dashboards. Simplicity won over power-user features in every round of testing.',
-                    'The biggest retention driver was not recording quality, but the AI-powered review experience \u2014 making past calls searchable was the killer feature.'
+                    'When I thought about what actually makes a stream worth staying in, it was never just the video. It was the live chat, the viewer count, the sense that other people were there too. Designing for presence, not just playback, shaped every screen that followed.',
+                    'Progressive disclosure taught me to think in layers, not pages. The instinct early on was to show everything at once to feel feature-rich. What worked better was structuring each screen so the first layer invited you in and the next rewarded engagement. The "View all" pattern, profile tabs, and notification grouping are all the same principle at work: show enough to orient, hide the rest until it is needed.',
+                    'Building out the notifications screen (Unread, Following, All) made me think harder about how easily trust breaks in a notification feed. The tab structure was not just an organisational choice — it was about giving the user a sense of control over what demands their attention and when.'
                 ]
             }
         }
