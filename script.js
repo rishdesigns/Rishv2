@@ -751,6 +751,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Magnetic 3D Tilt & Spotlight Logic
         card.addEventListener('mousemove', (e) => {
+          if (window.innerWidth <= 768) return;
           const rect = card.getBoundingClientRect();
           const x = e.clientX - rect.left;
           const y = e.clientY - rect.top;
@@ -770,6 +771,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         card.addEventListener('mouseleave', () => {
+          if (window.innerWidth <= 768) return;
           // Smoothly reset tilt
           card.style.setProperty('--tilt-x', `0deg`);
           card.style.setProperty('--tilt-y', `0deg`);
