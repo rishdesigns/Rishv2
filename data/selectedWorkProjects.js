@@ -126,9 +126,10 @@ export const selectedWorkProjects = [
                 ]
             },
             wireframes: {
-                title: 'Wireframes & Iterations',
-                description: 'Iterated through 3 major layout directions for the recording interface and playback experience, testing each with 5 users.',
+                title: 'Userflow & Wireframes',
+                description: 'Mapped the end-to-end user journey and explored multiple wireframe directions. Focused on simplifying interactions, reducing steps, and improving accessibility.',
                 images: [
+                    'Assets/USERFLOW.webp',
                     'Assets/selectedwork/Wireframes-Showcase.webp'
                 ],
                 layout: 'grid-2'
