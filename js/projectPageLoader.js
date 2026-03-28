@@ -560,7 +560,63 @@ class ProjectPageLoader {
     if (content) {
       content.style.display = 'block';
       setTimeout(() => content.classList.add('fade-in'), 100);
+      this.initImageModal(content);
     }
+  }
+
+  initImageModal(content) {
+    // Remove if exists to prevent duplicates on potential reloads
+    const existingModal = document.getElementById('image-modal');
+    if (existingModal) existingModal.remove();
+
+    const modalHtml = `
+      <div id="image-modal" class="image-modal">
+        <span class="image-modal-close">&times;</span>
+        <img class="image-modal-content" id="image-modal-img">
+      </div>
+    `;
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
+
+    const modal = document.getElementById('image-modal');
+    const modalImg = document.getElementById('image-modal-img');
+    const closeBtn = document.querySelector('.image-modal-close');
+
+    // Select all images within the content container
+    const images = content.querySelectorAll('img');
+
+    images.forEach(img => {
+      img.classList.add('zoomable-image');
+      img.addEventListener('click', () => {
+        modal.style.display = 'flex';
+        // forced reflow
+        void modal.offsetWidth;
+        modal.classList.add('show');
+        modalImg.src = img.src;
+        document.body.style.overflow = 'hidden';
+      });
+    });
+
+    const closeModal = () => {
+      modal.classList.remove('show');
+      setTimeout(() => {
+        modal.style.display = 'none';
+        modalImg.src = '';
+        document.body.style.overflow = '';
+      }, 300);
+    };
+
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        closeModal();
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modal.classList.contains('show')) {
+        closeModal();
+      }
+    });
   }
 
   initializeAnimations() {

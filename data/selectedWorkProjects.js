@@ -101,7 +101,10 @@ export const selectedWorkProjects = [
                 title: 'Research & Discovery',
                 text: 'Analysed 3 competing streaming platforms across three specific dimensions: how quickly a new user reaches a live stream, how creator credibility is established on a zero-reputation platform, and how notification systems drive re-engagement without fatigue. Nielsen Gracenote\'s 2025 State of Play report provided the quantitative anchor, confirming that discovery friction drives the highest abandonment among 18 to 24 year olds. Community research across streaming forums on Reddit and Discord surfaced the qualitative layer: mobile users do not fail because the content is bad. They fail because the path to content is broken.',
                 images: [
-                    'Assets/CA-STREAMX.webp'
+                    'Assets/CA-STREAMX.webp',
+                    'Assets/Competitive_Gap.webp',
+                    'Assets/PAIN_POINTS.webp'
+
                 ],
                 layout: 'grid-2'
             },
