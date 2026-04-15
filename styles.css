@@ -2547,17 +2547,38 @@ body {
   }
 
   /* Row 1: Impact + Tools (natural order) */
-  .card-impact { order: 1; }
-  .card-tools { order: 2; }
+  .card-impact {
+    order: 1;
+  }
+
+  .card-tools {
+    order: 2;
+  }
 
   /* Row 2: Reach + Process (paired together) */
-  .card-reach { order: 3; }
-  .card-process { order: 4; }
+  .card-reach {
+    order: 3;
+  }
+
+  .card-process {
+    order: 4;
+  }
 
   /* Row 3-5: Full-width cards */
-  .card-capabilities { order: 5; grid-column: span 2; }
-  .card-education { order: 6; grid-column: span 2; }
-  .card-achievements { order: 7; grid-column: span 2; }
+  .card-capabilities {
+    order: 5;
+    grid-column: span 2;
+  }
+
+  .card-education {
+    order: 6;
+    grid-column: span 2;
+  }
+
+  .card-achievements {
+    order: 7;
+    grid-column: span 2;
+  }
 }
 
 @media (max-width: 768px) {
