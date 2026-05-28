@@ -251,6 +251,33 @@ export const selectedWorkProjects = [
         }
     },
     {
+        "id": 4,
+        "title": "Hero Sections",
+        "slug": "Hero-Sections",
+        "category": "SaaS",
+        "type": "project",
+        "template": "project-showcase",
+        "shortDescription": "A collection of high-impact header explorations for modern web experiences.",
+        "heroPlaceholderImage": "Assets/Porsche.webp",
+        "galleryPlaceholderImages": [
+            "Assets/NFT Marketplace Website.webp",
+            "Assets/Valorant.webp",
+            "Assets/Porsche.webp"
+        ],
+        "role": "UI/UX Designer",
+        "platform": "Web",
+        "timeline": "",
+        "team": "Solo",
+        "externalLinks": {
+            "behance": null,
+            "dribbble": null
+        },
+        "seoMeta": {
+            "title": "Food Delivery App - Modern Ordering Platform | Rish Designs",
+            "description": "Sleek food delivery app design featuring real-time tracking, personalized recommendations, and seamless checkout experience."
+        }
+    },
+    {
         "id": 5,
         "title": "Scenario-Based Marketing Budget Intelligence Platform",
         "slug": "marketing-saas",
@@ -355,33 +382,6 @@ export const selectedWorkProjects = [
                 ],
                 "layout": "stacked"
             }
-        }
-    },
-    {
-        "id": 4,
-        "title": "Hero Sections",
-        "slug": "Hero-Sections",
-        "category": "SaaS",
-        "type": "project",
-        "template": "project-showcase",
-        "shortDescription": "A collection of high-impact header explorations for modern web experiences.",
-        "heroPlaceholderImage": "Assets/Porsche.webp",
-        "galleryPlaceholderImages": [
-            "Assets/NFT Marketplace Website.webp",
-            "Assets/Valorant.webp",
-            "Assets/Porsche.webp"
-        ],
-        "role": "UI/UX Designer",
-        "platform": "Web",
-        "timeline": "",
-        "team": "Solo",
-        "externalLinks": {
-            "behance": null,
-            "dribbble": null
-        },
-        "seoMeta": {
-            "title": "Food Delivery App - Modern Ordering Platform | Rish Designs",
-            "description": "Sleek food delivery app design featuring real-time tracking, personalized recommendations, and seamless checkout experience."
         }
     }
 ];
