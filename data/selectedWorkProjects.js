@@ -292,7 +292,12 @@ export const selectedWorkProjects = [
                 "title": "Project Overview",
                 "text": "<p data-start=\"21\" data-end=\"329\">Marketing teams often struggle to make confident budgeting decisions across multiple channels while balancing ROI, utilization, and campaign performance. Most existing tools focus heavily on reporting but lack the ability to simulate, compare, and optimize future marketing strategies in a collaborative way.</p>\n<p data-start=\"331\" data-end=\"705\">To solve this problem, I designed a modern scenario-based marketing budget planning platform that enables teams to create, analyze, and compare different budget allocation strategies before execution. The platform helps marketers forecast performance, optimize channel investments, and make data-driven decisions through interactive scenario modeling and real-time insights.</p>\n<p data-start=\"707\" data-end=\"1083\">The product includes a comprehensive dashboard for budget monitoring, a scenario builder for adjusting channel allocations, side-by-side scenario comparison tools, approval and collaboration workflows, and export capabilities for stakeholder communication. The experience was designed with a strong focus on usability, clarity, scalability, and enterprise-grade SaaS patterns.</p>\n<p data-start=\"1085\" data-end=\"1284\" data-is-last-node=\"\" data-is-only-node=\"\">The goal of the project was to create a product experience that feels strategic, analytical, and collaborative, helping marketing teams move from static spreadsheets to intelligent scenario planning.</p>",
                 "role": "UX/UI Designer",
-                "tools": [],
+                "tools": [
+                    "Figma",
+                    "FigJam",
+                    "Maze",
+                    "Notion"
+                ],
                 "responsibilities": [
                     "User Research",
                     "Strategy",
