@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio CMS | Rish Designs</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="cms-container">
+        <header class="cms-header">
+            <div class="header-content">
+                <h1>Rish Designs CMS</h1>
+                <p>Add new selected work projects seamlessly to your portfolio.</p>
+            </div>
+        </header>
+        
+        <div class="file-connection-section" id="connectionSection">
+            <div class="connection-box">
+                <div class="icon">📁</div>
+                <h2>Connect to Data File</h2>
+                <p>Please select your <strong>selectedWorkProjects.js</strong> file located in the <code>data/</code> folder.</p>
+                <button id="connectBtn" class="btn-primary">Select File to Edit</button>
+            </div>
+        </div>
+
+        <div id="dashboardSection" class="dashboard-section" style="display: none;">
+            <div class="dashboard-header">
+                <h2>Existing Projects</h2>
+                <button id="addNewBtn" class="btn-primary">Add New Project</button>
+            </div>
+            <div class="projects-grid" id="projectsGrid">
+                <!-- Project cards will be injected here -->
+            </div>
+        </div>
+
+        <form id="projectForm" class="cms-form" style="display: none;">
+            <div class="form-header-actions">
+                <button type="button" id="cancelBtn" class="btn-secondary">← Back to Dashboard</button>
+                <h2 id="formTitle">Add New Project</h2>
+            </div>
+            <div class="form-section">
+                <h2>1. Core Information</h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="title">Project Title</label>
+                        <input type="text" id="title" required placeholder="e.g. Stream X: Social Live Streaming Platform">
+                    </div>
+                    <div class="form-group">
+                        <label for="slug">URL Slug</label>
+                        <input type="text" id="slug" required placeholder="e.g. stream-x">
+                        <small>No spaces, use hyphens</small>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="category">Category</label>
+                        <input type="text" id="category" required placeholder="e.g. Mobile, Landing Pages">
+                    </div>
+                    <div class="form-group">
+                        <label for="type">Project Type</label>
+                        <select id="type" required>
+                            <option value="project">Project (Showcase only)</option>
+                            <option value="case-study">Case Study (Detailed)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="template">Template</label>
+                        <select id="template" required>
+                            <option value="project-showcase">Project Showcase</option>
+                            <option value="case-study-default">Case Study Default</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="shortDescription">Short Description</label>
+                    <textarea id="shortDescription" rows="2" required placeholder="Brief description for the grid card..."></textarea>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2>2. Media & Links</h2>
+                <div class="form-group">
+                    <label for="heroPlaceholderImage">Hero Image Path</label>
+                    <input type="text" id="heroPlaceholderImage" required placeholder="e.g. Assets/selectedwork/App_thumbnail.webp">
+                </div>
+                <div class="form-group">
+                    <label for="galleryPlaceholderImages">Gallery Images (Comma separated paths)</label>
+                    <textarea id="galleryPlaceholderImages" rows="3" required placeholder="Assets/image1.webp, Assets/image2.webp"></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="behanceLink">Behance Link (Optional)</label>
+                        <input type="url" id="behanceLink" placeholder="https://behance.net/...">
+                    </div>
+                    <div class="form-group">
+                        <label for="dribbbleLink">Dribbble Link (Optional)</label>
+                        <input type="url" id="dribbbleLink" placeholder="https://dribbble.com/...">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2>3. Project Details & SEO</h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="role">Role</label>
+                        <input type="text" id="role" required placeholder="e.g. Lead UX/UI Designer">
+                    </div>
+                    <div class="form-group">
+                        <label for="platform">Platform</label>
+                        <input type="text" id="platform" required placeholder="e.g. iOS, Android, Web">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="timeline">Timeline</label>
+                        <input type="text" id="timeline" placeholder="e.g. 4 Weeks">
+                    </div>
+                    <div class="form-group">
+                        <label for="team">Team</label>
+                        <input type="text" id="team" required placeholder="e.g. Solo">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="seoTitle">SEO Title</label>
+                        <input type="text" id="seoTitle" required placeholder="Page title for search engines">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="seoDescription">SEO Description</label>
+                    <textarea id="seoDescription" rows="2" required placeholder="Meta description for search engines"></textarea>
+                </div>
+            </div>
+
+            <div id="caseStudySections" class="form-section" style="display: none;">
+                <h2>4. Case Study Details</h2>
+                <p style="color: var(--text-secondary); margin-bottom: 20px; font-size: 0.9rem;">Toggle the sections you want to include in this case study.</p>
+                
+                <div class="toggles-grid">
+                    <label class="toggle-label"><input type="checkbox" id="toggle-overview" class="section-toggle" data-target="group-overview" checked> Overview</label>
+                    <label class="toggle-label"><input type="checkbox" id="toggle-problem" class="section-toggle" data-target="group-problem" checked> Problem</label>
+                    <label class="toggle-label"><input type="checkbox" id="toggle-goals" class="section-toggle" data-target="group-goals"> Goals</label>
+                    <label class="toggle-label"><input type="checkbox" id="toggle-research" class="section-toggle" data-target="group-research" checked> Research</label>
+                    <label class="toggle-label"><input type="checkbox" id="toggle-strategy" class="section-toggle" data-target="group-strategy"> Strategy</label>
+                    <label class="toggle-label"><input type="checkbox" id="toggle-wireframes" class="section-toggle" data-target="group-wireframes"> Wireframes</label>
+                    <label class="toggle-label"><input type="checkbox" id="toggle-finalDesign" class="section-toggle" data-target="group-finalDesign"> Final Design</label>
+                    <label class="toggle-label"><input type="checkbox" id="toggle-uxDecisions" class="section-toggle" data-target="group-uxDecisions"> UX Decisions</label>
+                    <label class="toggle-label"><input type="checkbox" id="toggle-impact" class="section-toggle" data-target="group-impact"> Impact</label>
+                    <label class="toggle-label"><input type="checkbox" id="toggle-learnings" class="section-toggle" data-target="group-learnings"> Learnings</label>
+                </div>
+
+                <!-- OVERVIEW -->
+                <div class="case-study-group" id="group-overview">
+                    <h3>Overview Section</h3>
+                    <div class="form-group">
+                        <label for="csOverviewTitle">Title</label>
+                        <input type="text" id="csOverviewTitle" value="Project Overview">
+                    </div>
+                    <div class="form-group">
+                        <label>Overview Text</label>
+                        <div class="rich-text-wrapper">
+                            <div class="rich-text-toolbar" id="toolbar-csOverviewText"></div>
+                            <div class="rich-text-area" contenteditable="true" id="csOverviewText" data-placeholder="Describe the project overview..."></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="csOverviewTools">Tools Used (Comma separated)</label>
+                        <input type="text" id="csOverviewTools" placeholder="Figma, Notion, Maze">
+                    </div>
+                    <div class="form-group">
+                        <label for="csOverviewResponsibilities">Responsibilities (Comma separated)</label>
+                        <input type="text" id="csOverviewResponsibilities" placeholder="User Research, Strategy, UI Design">
+                    </div>
+                </div>
+
+                <!-- PROBLEM -->
+                <div class="case-study-group" id="group-problem">
+                    <h3>Problem Section</h3>
+                    <div class="form-group">
+                        <label for="csProblemLabel">Label</label>
+                        <input type="text" id="csProblemLabel" value="The Challenge">
+                    </div>
+                    <div class="form-group">
+                        <label>Headline</label>
+                        <div class="rich-text-wrapper">
+                            <div class="rich-text-toolbar" id="toolbar-csProblemHeadline"></div>
+                            <div class="rich-text-area" contenteditable="true" id="csProblemHeadline" data-placeholder="Use the toolbar to add highlights, bold, etc."></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Problem Description</label>
+                        <div class="rich-text-wrapper">
+                            <div class="rich-text-toolbar" id="toolbar-csProblemText"></div>
+                            <div class="rich-text-area" contenteditable="true" id="csProblemText" data-placeholder="Describe the problem in detail..."></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- GOALS -->
+                <div class="case-study-group" id="group-goals" style="display: none;">
+                    <h3>Goals Section</h3>
+                    <div class="form-group">
+                        <label for="csGoalsTitle">Title</label>
+                        <input type="text" id="csGoalsTitle" value="Goals">
+                    </div>
+                    <div class="form-group">
+                        <label for="csGoalsBusiness">Business Goals (One per line)</label>
+                        <textarea id="csGoalsBusiness" rows="3" placeholder="Increase session depth...&#10;Create monetisation surface..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="csGoalsUser">User Goals (One per line)</label>
+                        <textarea id="csGoalsUser" rows="3" placeholder="Find something worth watching...&#10;Feel present and social..."></textarea>
+                    </div>
+                </div>
+
+                <!-- RESEARCH -->
+                <div class="case-study-group" id="group-research">
+                    <h3>Research & Discovery</h3>
+                    <div class="form-group">
+                        <label for="csResearchTitle">Title</label>
+                        <input type="text" id="csResearchTitle" value="Research & Discovery">
+                    </div>
+                    <div class="form-group">
+                        <label>Research Text</label>
+                        <div class="rich-text-wrapper">
+                            <div class="rich-text-toolbar" id="toolbar-csResearchText"></div>
+                            <div class="rich-text-area" contenteditable="true" id="csResearchText" data-placeholder="Describe the research process..."></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="csResearchImages">Research Images (Comma separated paths)</label>
+                        <textarea id="csResearchImages" rows="2"></textarea>
+                    </div>
+                </div>
+
+                <!-- STRATEGY -->
+                <div class="case-study-group" id="group-strategy" style="display: none;">
+                    <h3>Strategy</h3>
+                    <div class="form-group">
+                        <label for="csStrategyTitle">Title</label>
+                        <input type="text" id="csStrategyTitle" value="Strategy">
+                    </div>
+                    <div class="form-group">
+                        <label>Strategy Items</label>
+                        <div class="dynamic-cards-container" id="strategyCardsContainer"></div>
+                        <button type="button" class="add-card-btn" onclick="CMS.addStrategyCard()">
+                            <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                            Add Strategy Item
+                        </button>
+                    </div>
+                </div>
+
+                <!-- WIREFRAMES -->
+                <div class="case-study-group" id="group-wireframes" style="display: none;">
+                    <h3>Wireframes</h3>
+                    <div class="form-group">
+                        <label for="csWireframesTitle">Title</label>
+                        <input type="text" id="csWireframesTitle" value="Userflow & Wireframes">
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <div class="rich-text-wrapper">
+                            <div class="rich-text-toolbar" id="toolbar-csWireframesDesc"></div>
+                            <div class="rich-text-area" contenteditable="true" id="csWireframesDesc" data-placeholder="Describe the wireframing process..."></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="csWireframesImages">Images (Comma separated paths)</label>
+                        <textarea id="csWireframesImages" rows="2"></textarea>
+                    </div>
+                </div>
+
+                <!-- FINAL DESIGN -->
+                <div class="case-study-group" id="group-finalDesign" style="display: none;">
+                    <h3>Final Design</h3>
+                    <div class="form-group">
+                        <label for="csFinalDesignTitle">Title</label>
+                        <input type="text" id="csFinalDesignTitle" value="Final Design">
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <div class="rich-text-wrapper">
+                            <div class="rich-text-toolbar" id="toolbar-csFinalDesignDesc"></div>
+                            <div class="rich-text-area" contenteditable="true" id="csFinalDesignDesc" data-placeholder="Describe the final design..."></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="csFinalDesignImages">Images (Comma separated paths)</label>
+                        <textarea id="csFinalDesignImages" rows="2"></textarea>
+                    </div>
+                </div>
+
+                <!-- UX DECISIONS — Dynamic Cards -->
+                <div class="case-study-group" id="group-uxDecisions" style="display: none;">
+                    <h3>Key UX Decisions</h3>
+                    <div class="form-group">
+                        <label for="csUxDecisionsTitle">Section Title</label>
+                        <input type="text" id="csUxDecisionsTitle" value="Key UX Decisions">
+                    </div>
+                    <div class="form-group">
+                        <label>UX Decision Items</label>
+                        <div class="dynamic-cards-container" id="uxDecisionCardsContainer"></div>
+                        <button type="button" class="add-card-btn" onclick="CMS.addUxDecisionCard()">
+                            <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                            Add UX Decision
+                        </button>
+                    </div>
+                </div>
+
+                <!-- IMPACT -->
+                <div class="case-study-group" id="group-impact" style="display: none;">
+                    <h3>Impact & Results</h3>
+                    <div class="form-group">
+                        <label for="csImpactTitle">Title</label>
+                        <input type="text" id="csImpactTitle" value="Impact & Results">
+                    </div>
+                    <div class="form-group">
+                        <label>Headline (Optional)</label>
+                        <div class="rich-text-wrapper">
+                            <div class="rich-text-toolbar" id="toolbar-csImpactHeadline"></div>
+                            <div class="rich-text-area" contenteditable="true" id="csImpactHeadline" data-placeholder="Optional headline..."></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Text</label>
+                        <div class="rich-text-wrapper">
+                            <div class="rich-text-toolbar" id="toolbar-csImpactText"></div>
+                            <div class="rich-text-area" contenteditable="true" id="csImpactText" data-placeholder="Describe impact and results..."></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Highlight Cards</label>
+                        <div class="dynamic-cards-container" id="impactHighlightCardsContainer"></div>
+                        <button type="button" class="add-card-btn" onclick="CMS.addImpactHighlightCard()">
+                            <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                            Add Highlight
+                        </button>
+                    </div>
+                </div>
+
+                <!-- LEARNINGS — Dynamic Cards -->
+                <div class="case-study-group" id="group-learnings" style="display: none;">
+                    <h3>Key Learnings</h3>
+                    <div class="form-group">
+                        <label for="csLearningsTitle">Title</label>
+                        <input type="text" id="csLearningsTitle" value="Key Learnings">
+                    </div>
+                    <div class="form-group">
+                        <label>Learning Cards</label>
+                        <div class="dynamic-cards-container" id="learningCardsContainer"></div>
+                        <button type="button" class="add-card-btn" onclick="CMS.addLearningCard()">
+                            <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                            Add Learning
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <div id="statusMessage" class="status-message"></div>
+                <button type="submit" id="submitBtn" class="btn-primary">Publish Project</button>
+            </div>
+        </form>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

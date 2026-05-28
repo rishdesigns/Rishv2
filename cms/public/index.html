@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio CMS | Rish Designs</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="cms-container">
+        <header class="cms-header">
+            <div class="header-content">
+                <h1>Rish Designs CMS</h1>
+                <p>Add new selected work projects seamlessly to your portfolio.</p>
+            </div>
+        </header>
+
+        <form id="projectForm" class="cms-form">
+            <div class="form-section">
+                <h2>1. Core Information</h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="title">Project Title</label>
+                        <input type="text" id="title" required placeholder="e.g. Stream X: Social Live Streaming Platform">
+                    </div>
+                    <div class="form-group">
+                        <label for="slug">URL Slug</label>
+                        <input type="text" id="slug" required placeholder="e.g. stream-x">
+                        <small>No spaces, use hyphens</small>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="category">Category</label>
+                        <input type="text" id="category" required placeholder="e.g. Mobile, Landing Pages">
+                    </div>
+                    <div class="form-group">
+                        <label for="type">Project Type</label>
+                        <select id="type" required>
+                            <option value="project">Project (Showcase only)</option>
+                            <option value="case-study">Case Study (Detailed)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="template">Template</label>
+                        <select id="template" required>
+                            <option value="project-showcase">Project Showcase</option>
+                            <option value="case-study-default">Case Study Default</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="shortDescription">Short Description</label>
+                    <textarea id="shortDescription" rows="2" required placeholder="Brief description for the grid card..."></textarea>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2>2. Media & Links</h2>
+                <div class="form-group">
+                    <label for="heroPlaceholderImage">Hero Image Path</label>
+                    <input type="text" id="heroPlaceholderImage" required placeholder="e.g. Assets/selectedwork/App_thumbnail.webp">
+                </div>
+                <div class="form-group">
+                    <label for="galleryPlaceholderImages">Gallery Images (Comma separated paths)</label>
+                    <textarea id="galleryPlaceholderImages" rows="3" required placeholder="Assets/image1.webp, Assets/image2.webp"></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="behanceLink">Behance Link (Optional)</label>
+                        <input type="url" id="behanceLink" placeholder="https://behance.net/...">
+                    </div>
+                    <div class="form-group">
+                        <label for="dribbbleLink">Dribbble Link (Optional)</label>
+                        <input type="url" id="dribbbleLink" placeholder="https://dribbble.com/...">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2>3. Project Details & SEO</h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="role">Role</label>
+                        <input type="text" id="role" required placeholder="e.g. Lead UX/UI Designer">
+                    </div>
+                    <div class="form-group">
+                        <label for="platform">Platform</label>
+                        <input type="text" id="platform" required placeholder="e.g. iOS, Android, Web">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="timeline">Timeline</label>
+                        <input type="text" id="timeline" placeholder="e.g. 4 Weeks">
+                    </div>
+                    <div class="form-group">
+                        <label for="team">Team</label>
+                        <input type="text" id="team" required placeholder="e.g. Solo">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="seoTitle">SEO Title</label>
+                        <input type="text" id="seoTitle" required placeholder="Page title for search engines">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="seoDescription">SEO Description</label>
+                    <textarea id="seoDescription" rows="2" required placeholder="Meta description for search engines"></textarea>
+                </div>
+            </div>
+
+            <div id="caseStudySections" class="form-section" style="display: none;">
+                <h2>4. Case Study Details</h2>
+                <p style="color: var(--text-secondary); margin-bottom: 20px; font-size: 0.9rem;">Fill in the specific content for the case study. Leave empty to hide the section.</p>
+                
+                <div class="case-study-group">
+                    <h3>Overview Section</h3>
+                    <div class="form-group">
+                        <label for="csOverviewText">Overview Text</label>
+                        <textarea id="csOverviewText" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="csOverviewTools">Tools Used (Comma separated)</label>
+                        <input type="text" id="csOverviewTools" placeholder="Figma, Notion, Maze">
+                    </div>
+                    <div class="form-group">
+                        <label for="csOverviewResponsibilities">Responsibilities (Comma separated)</label>
+                        <input type="text" id="csOverviewResponsibilities" placeholder="User Research, Strategy, UI Design">
+                    </div>
+                </div>
+
+                <div class="case-study-group">
+                    <h3>Problem Section</h3>
+                    <div class="form-group">
+                        <label for="csProblemHeadline">Headline</label>
+                        <input type="text" id="csProblemHeadline" placeholder="Use <span class='highlight'>text</span> for accents">
+                    </div>
+                    <div class="form-group">
+                        <label for="csProblemText">Problem Description</label>
+                        <textarea id="csProblemText" rows="4"></textarea>
+                    </div>
+                </div>
+
+                <div class="case-study-group">
+                    <h3>Research & Discovery</h3>
+                    <div class="form-group">
+                        <label for="csResearchText">Research Text</label>
+                        <textarea id="csResearchText" rows="4"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="csResearchImages">Research Images (Comma separated paths)</label>
+                        <textarea id="csResearchImages" rows="2"></textarea>
+                    </div>
+                </div>
+                
+                <!-- Additional sections can be added manually to the JSON if complex, but these cover the basics -->
+            </div>
+
+            <div class="form-actions">
+                <div id="statusMessage" class="status-message"></div>
+                <button type="submit" id="submitBtn" class="btn-primary">Publish Project</button>
+            </div>
+        </form>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

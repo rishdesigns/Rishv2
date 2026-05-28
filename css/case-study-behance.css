@@ -463,6 +463,11 @@
     font-weight: 600;
 }
 
+.template-case-study-behance .highlight,
+.template-case-study-behance span.highlight {
+    color: var(--cs-accent);
+}
+
 /* ================================================================
    SECTION — PROBLEM STATEMENT (Editorial Headline)
    ================================================================ */
